@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "trueface-libraries-docs": {
+      "hosting": {
+        "trueface-mobile-docs": [
+          "trueface-libraries-docs"
+        ]
+      }
+    }
+  }
+}

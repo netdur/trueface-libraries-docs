@@ -20,4 +20,6 @@
 
 #### Versions
 1. [0.18](/doc/node/install)
-1. [0.15](/doc/node/install)
+1. [0.17](/doc/node/install)
+1. [0.16](/doc/node/install)
+3. [0.15](/doc/node/install)

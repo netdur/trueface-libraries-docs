@@ -4,9 +4,9 @@ name: CI/CD
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # build job
@@ -35,11 +35,11 @@ jobs:
         with:
           name: public
           path: ./public
-  # deploy job   
+  # deploy job
   deploy:
     name: Deploy to firebase
     runs-on: ubuntu-latest
-    # only run if build job complte successfully 
+    # only run if build job complte successfully
     needs: [build]
     steps:
       # building the app before deploy

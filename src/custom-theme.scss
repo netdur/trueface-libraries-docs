@@ -1,0 +1,44 @@
+@import '~@angular/material/theming';
+
+$custom-typography: mat-typography-config(
+  $font-family: 'Raleway',
+);
+
+@include mat-core($custom-typography);
+
+$trueface-mobile-docs-primary: mat-palette($mat-indigo);
+$trueface-mobile-docs-accent: mat-palette($mat-pink, A200, A100, A400);
+$trueface-mobile-docs-warn: mat-palette($mat-red);
+$trueface-mobile-docs-theme: mat-light-theme((
+  color: (
+    primary: $trueface-mobile-docs-primary,
+    accent: $trueface-mobile-docs-accent,
+    warn: $trueface-mobile-docs-warn,
+  )
+));
+
+$trueface-mobile-docs-primary-dark: mat-palette($mat-blue-grey);
+$trueface-mobile-docs-accent-dark: mat-palette($mat-amber, A200, A100, A400);
+$trueface-mobile-docs-warn-dark: mat-palette($mat-deep-orange);
+$trueface-mobile-docs-theme-dark: mat-dark-theme((
+  color: (
+    primary: $trueface-mobile-docs-primary-dark,
+    accent: $trueface-mobile-docs-accent-dark,
+    warn: $trueface-mobile-docs-warn-dark,
+  )
+));
+
+@media (prefers-color-scheme: light) {
+  @include angular-material-theme($trueface-mobile-docs-theme);
+}
+
+@media (prefers-color-scheme: dark) {
+  @include angular-material-theme($trueface-mobile-docs-theme-dark);
+  html {
+    background: #303030;
+    color: #fff;
+  }
+  a {
+    color: #f48fb1;
+  }
+}

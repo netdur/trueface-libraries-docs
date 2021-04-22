@@ -1,0 +1,15 @@
+.logo {
+  display: inline-block;
+  width: 120px;
+  top: 6px;
+  position: relative;
+}
+
+.logo>img {
+  max-height: 37px;
+}
+
+nav, main {
+  padding: 12px;
+  overflow-y: scroll;
+}

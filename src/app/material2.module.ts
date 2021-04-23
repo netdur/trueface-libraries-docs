@@ -24,7 +24,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-
 @NgModule({
 
   imports: [MatButtonModule, MatCheckboxModule, MatCardModule, MatDividerModule, MatIconModule,

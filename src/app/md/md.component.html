@@ -1,1 +1,11 @@
+<section class="toolbox">
+  <span class="spacer"></span>
+  <a target='_blank' [href]="getSourceLink()" mat-icon-button matTooltip="ٌView page source">
+    <mat-icon>code</mat-icon>
+  </a>
+  <a target='_blank' [href]="getReportBugLink()" mat-icon-button matTooltip="ٌReport an issue with this page">
+    <mat-icon>bug_report</mat-icon>
+  </a>
+</section>
+
 <div markdown [src]="md"></div>

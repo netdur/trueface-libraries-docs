@@ -13,3 +13,6 @@ nav, main {
   padding: 12px;
   overflow-y: scroll;
 }
+footer {
+  padding: 6px;
+}

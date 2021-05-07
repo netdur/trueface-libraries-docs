@@ -1,6 +1,6 @@
 <div fxFlexFill fxLayout="column">
 
-  <mat-toolbar fxFlex="none" class="mat-elevation-z2" color="primary">
+  <mat-toolbar fxFlex="none" class="mat-elevation-z2 toolbar">
     <a class="logo" routerLink="/">
       <img src="../assets/trueface-white.svg" />
     </a>
@@ -18,22 +18,24 @@
 
   </mat-toolbar>
 
-  <div fxFlex>
+  <div fxFlex class="container">
     <div fxFill fxLayout="row">
 
-      <nav fxFlex="224px">
-        <markdown [src]="'./assets/docs/nav.md'"></markdown>
+      <nav class="nav" fxFlex="224px">
+        <section>
+          <markdown [src]="'./assets/docs/nav.md'"></markdown>
+        </section>
       </nav>
 
-      <main fxFlex>
+      <main fxFlex fxLayout="column">
         <router-outlet></router-outlet>
+
+        <footer fxFlex="none">
+          © 214 Technologies Inc 2021
+        </footer>
       </main>
 
     </div>
   </div>
-
-  <footer fxFlex="none">
-    © 214 Technologies Inc 2021
-  </footer>
 
 </div>

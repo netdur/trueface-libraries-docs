@@ -38,7 +38,7 @@ Improves the computation speed for 1 to 1 comparisons and 1 to N searches by com
 
 ## `public boolean enableGPU = false`
 
-Enable GPU support (default is false). Note, GPU support requires a different version of the SDK.
+Enable GPU support (default is false).
 
 ## `public int deviceIndex = 0`
 

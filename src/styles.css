@@ -1,12 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .spacer {
   flex: 1 1 auto;
 }
 
 a {
-  text-decoration: none;
+  text-decoration: underline;
+}
+
+
+/* MD docs */
+
+article table thead {
+  border-top: 1px solid #dadce0;
+  border-bottom: 1px solid #dadce0;
+  background-color: #e8eaed;
+}
+
+article table td {
+  min-width: 300px;
+}
+
+article {
+  width: 70%;
+}
+
+article #table-of-contents {
+  position: fixed;
+  width: 20%;
+  right: 0px;
+  top: 80px;
+}
+
+article #table-of-contents + ul {
+  position: fixed;
+  width: 20%;
+  right: 0px;
+  top: 100px;
 }

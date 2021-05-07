@@ -12,7 +12,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.markdownService.renderer.link = (href: string, title: string, text: string) => {
-      if (!href.startsWith('/')) {
+      if (href.startsWith('http')) {
         return `<a href="${href}" target="_blank">${text}</a>`;
       }
       return `<a

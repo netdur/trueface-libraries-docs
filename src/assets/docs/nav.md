@@ -1,14 +1,9 @@
 #### Get Started
-1. [Overview](/doc/overview)
-1. [Concepts](/doc/concepts)
-1. [Samples](/doc/samples)
+* [Overview](/doc/overview)
+* [Concepts](/doc/concepts)
+* [Samples](/doc/samples)
 
 #### Android
-1. [Install](/doc/android/install)
-1. [API](/doc/android/API)
-
-#### iOS
-
-#### C
-
-#### Node
+* [Setup](/doc/android/setup)
+* [Guide](/doc/android/guide)
+* [Reference](/doc/android/reference)

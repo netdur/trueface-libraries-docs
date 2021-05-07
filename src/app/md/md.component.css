@@ -1,5 +1,10 @@
 .toolbox {
   display: inline-block;
-  right: 12px;
-  position: fixed;
+  right: 32px;
+  position: absolute;
+}
+
+main {
+  padding: 24px;
+  position: relative;
 }

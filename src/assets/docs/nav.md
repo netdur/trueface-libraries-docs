@@ -7,3 +7,6 @@
 * [Setup](/doc/android/setup)
 * [Guide](/doc/android/guide)
 * [Reference](/doc/android/reference)
+
+#### .NET C#
+* [Guide](/doc/dotnet/guide)

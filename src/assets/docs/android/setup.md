@@ -1,8 +1,6 @@
 ## Setup
 
-_insert download note_
-
-Include Trueface SDK .aar file using Gradle, first use Android Studio menu:
+Download [Trueface SDK 3.1.0](https://github.com/netdur/trueface-libraries-docs/releases/tag/v3.1) and include AAR file using Gradle, first use Android Studio menu:
 
 ```
 File -> New -> New Module -> Import .jar/.aar and import your .aar.

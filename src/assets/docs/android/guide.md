@@ -2,17 +2,15 @@
 
 ## Table of Contents
 
-- [Input image](/doc/android/guide)
+- [Input image](/doc/android/guide#input-image)
 - [License](../doc/android/guide#license)
-- [Configuration](/doc/android/guide)
-- [Prepare the input image](/doc/android/guide)
-- [Process the image](/doc/android/guide)
-- [Get information about detected faces](/doc/android/guide)
+- [Configuration](/doc/android/guide#configuration)
+- [Prepare the input image](/doc/android/guide#prepare-the-input-image)
+- [Process the image](/doc/android/guide#process-the-image)
+- [Get information about detected faces](/doc/android/guide#get-information-about-detected-faces)
 - [Object Detection](../doc/android/guide#object-detection)
 - [Face Matching](../doc/android/guide#face-matching)
 - [Face Recognition](../doc/android/guide#face-recognition)
-
-some sentence
 
 ## Input image
 
@@ -60,7 +58,7 @@ SDK sdk = new SDK(getApplicationContext(), configurationOptions);
 
 _Note:_ for unit tests, you can obtain Context using `InstrumentationRegistry`
 
-```Java
+```java
 Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 ```
 
@@ -68,24 +66,24 @@ Context context = InstrumentationRegistry.getInstrumentation().getTargetContext(
 
 To detect faces in an image, set image from either a YuvImage, Image, Bitmap, byte array, or a file on the device. you should use an image with dimensions of at least 480x360 pixels. If you are detecting faces in real time, capturing frames at this minimum resolution can help reduce latency.
 
-```Java
+```java
 YuvImage image = ...;
 sdk.setImage(image);
 ```
 
-```Java
+```java
 Image image = ...;
 sdk.setImage(image);
 ```
 
-```Java
+```java
 Bitmap image = ...;
 sdk.setImage(image);
 // or set color space
 sdk.setImage(image, ColorCode.rgba);
 ```
 
-```Java
+```java
 int width = ...;
 int height = ...;
 byte[] data = ...;
@@ -93,14 +91,14 @@ ColorCode colorCode = ...;
 setImage(width, height, data, colorCode);
 ```
 And finally
-```Java
+```java
 String imagePath = ...;
 setImage(imagePath);
 ```
 
 Please make sure to rotate photo correcrly before calling `setImage`, if you don't use a camera library that gives you the image's rotation degree, you can calculate it from the device's rotation degree and the orientation of camera sensor in the device:
 
-```Java
+```java
 private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 static {
     ORIENTATIONS.append(Surface.ROTATION_0, 0);

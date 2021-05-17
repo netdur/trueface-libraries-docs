@@ -2,12 +2,11 @@
 
 ## Table of Contents
 
-- [Input image](/doc/android/guide#input-image)
-- [License](../doc/android/guide#license)
-- [Configuration](/doc/android/guide#configuration)
-- [Prepare the input image](/doc/android/guide#prepare-the-input-image)
-- [Face Matching](../doc/android/guide#face-matching)
-- [Face Recognition](../doc/android/guide#face-recognition)
+- [Input image](/doc/dotnet/guide#input-image)
+- [License](../doc/dotnet/guide#license)
+- [Configuration](/doc/dotnet/guide#configuration)
+- [Prepare the input image](/doc/dotnet/guide#prepare-the-input-image)
+- [Face Recognition](../doc/dotnet/guide#face-recognition)
 
 ## Input image
 

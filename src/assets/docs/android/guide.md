@@ -45,7 +45,13 @@ Ex. 40 pixels yields the detection scale range of ~40 pixels to 1280 (=40x2^5) p
 If set to -1, will dynamically adjusts the face detection scale range from image-height/32 to image-height to ensure that large faces are detected in high resolution images.
 
 2. `enableGPU`
-Enable GPU support (default is false).
+Enable GPU support (default is false), GPU support only available for face detection and lite `frModel`.
+
+3. `frModel` Facial recognition models.
+To compare model performances, refer to our [ROC curves]("http://performance.trueface.ai/").
+You can also find more information on our [FAQ page]("https://reference.trueface.ai/cpp/dev/latest/py/faq.html#what-are-the-differences-between-the-face-recognition-models").
+The current most accurate model is TFV5.
+
 
 For example:
 

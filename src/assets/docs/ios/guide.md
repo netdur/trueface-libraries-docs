@@ -5,6 +5,7 @@
 - [Versioning](/doc/ios/guide#versioning)
 - [Install](/doc/ios/guide#install)
 - [Usage](../doc/ios/guide#usage)
+- [TFV5](/doc/ios/guide#tfv5)
 - [Tips](/doc/ios/guide#tips)
 
 ## Versioning
@@ -28,7 +29,7 @@ To use Trueface SDK with Swift, please read [Importing Objective-C into Swift
 
 The Trueface SDK for iOS has [C++ API](https://reference.trueface.ai/cpp/master/latest/index.html), which can easily be used in your project by adding an `m` to your Objective-C file, for example, rename `ViewController.m` to `ViewController.mm` the import headers:
 
-```CPP
+```cpp
 #import "ViewController.h"
 
 #include <trueface/tf_data_types.h>
@@ -55,6 +56,26 @@ The Trueface SDK for iOS has [C++ API](https://reference.trueface.ai/cpp/master/
 @end
 ```
 
+## TFV5
+
+The TFV5 model can be tested with virtual device, it will pehaps crash on real iPhone due memory limition, if such limitation is not an issue in your case, you can add TFV5 model as follow:
+
+1. Drag and drop `face_recognition_cpu_v5.trueface.enc` to your project
+
+![alt text](assets/images/ios/tfv5_model.png)
+
+2. Configure SDK to use TFV5 model and models path:
+
+```cpp
+Trueface::ConfigurationOptions options;
+options.frModel = Trueface::FacialRecognitionModel::TFV5;
+
+NSString *assets = [[NSBundle mainBundle] resourcePath];
+options.modelsPath = std::string([assets UTF8String]);
+
+Trueface::SDK *sdk = new Trueface::SDK(options);
+```
+
 ## Tips
 
 * You can create a `group` folder to hold assets like models then instruct SDK to find them:
@@ -72,5 +93,3 @@ NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserD
 NSString *libraryDirectory = [paths objectAtIndex:0];
 std::string db = std::string([libraryDirectory UTF8String]) + std::string("/test.db");
 ```
-
-* TFV5 model can be tested with virtual device only due to memory restiction on iPhones.

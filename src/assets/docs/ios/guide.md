@@ -58,7 +58,7 @@ The Trueface SDK for iOS has [C++ API](https://reference.trueface.ai/cpp/master/
 
 ## TFV5
 
-The TFV5 model can be tested with virtual device, it will pehaps crash on real iPhone due memory limition, if such limitation is not an issue in your case, you can add TFV5 model as follow:
+The TFV5 model can be tested with a virtual device, you may run into memory limitations on real iPhones, if such limitation are not an issue in your case, you can add TFV5 model as follows:
 
 1. Drag and drop `face_recognition_cpu_v5.trueface.enc` to your project
 
@@ -78,7 +78,7 @@ Trueface::SDK *sdk = new Trueface::SDK(options);
 
 ## Tips
 
-* You can create a `group` folder to hold assets like models then instruct SDK to find them:
+* You can create a group folder to hold assets like models then instruct the SDK to find them as shown below:
 
 ```cpp
 Trueface::ConfigurationOptions options;
@@ -86,7 +86,7 @@ NSString *assets = [[NSBundle mainBundle] resourcePath];
 options.modelsPath = std::string([assets UTF8String]);
 ```
 
-* To save database in a writable path, please do as follow:
+* To save the database in a writable path, you can use the following code example:
 
 ```cpp
 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);

@@ -15,6 +15,15 @@ dependencies {
 }
 ```
 
+For Android Studio 4.2.1 and above, create folder `libs` in root directory Then in your project’s build.gradle (the one under ‘app’) add the following:
+
+```kotlin
+dependencies {
+  ...
+  implementation files('../libs/trueface-sdk-$VERSION.aar')
+}
+```
+
 ## Distribution
 
 The SDK supports 32-bit (armeabi-v7a - x86) and 64-bit (arm64-v8a - x86_64), If you are using Google Play Store to distribute mobile app, the customers will only download one of four architects.

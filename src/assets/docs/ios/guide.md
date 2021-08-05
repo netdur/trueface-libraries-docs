@@ -14,7 +14,7 @@ We have reverted iOS versioning schema to match with C++ versioning.
 
 ## Install
 
-To install Trueface SDK please download and extract [Trueface SDK 0.28](https://github.com/netdur/trueface-libraries-docs/releases/tag/v0.28.2), then drag the folder trueface.framework into Xcode
+To install Trueface SDK please download and extract [Trueface SDK 0.28](https://github.com/netdur/trueface-libraries-docs/releases/tag/v0.28.4), then drag the folder trueface.framework into Xcode
 
 ![alt text](assets/images/ios/drag_framework.png)
 
@@ -24,6 +24,14 @@ Also make sure to check `Copy items if needed` and your targets
 
 To use Trueface SDK with Swift, please read [Importing Objective-C into Swift
 ](https://developer.apple.com/documentation/swift/imported_c_and_objective-c_apis/importing_objective-c_into_swift)
+
+### Cocoapods
+
+You can install Trueface SDK using Cocoapods
+
+```cpp
+pod 'trueface', '0.28.1-1'
+```
 
 ## Usage
 

@@ -101,3 +101,31 @@ NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserD
 NSString *libraryDirectory = [paths objectAtIndex:0];
 std::string db = std::string([libraryDirectory UTF8String]) + std::string("/test.db");
 ```
+
+* You can enable GPU computing for Face Detection, Face Recognition LITE and LITE_V2, TFV5 with GPU is not supported at moment.
+
+```cpp
+Trueface::ConfigurationOptions options;
+options.frModel = Trueface::FacialRecognitionModel::TFV5;
+options.enableGPU.faceRecognizer = false;
+options.enableGPU.faceDetector = true;
+```
+
+```cpp
+Trueface::ConfigurationOptions options;
+options.frModel = Trueface::FacialRecognitionModel::LITE;
+options.enableGPU.faceRecognizer = true;
+options.enableGPU.faceDetector = true;
+```
+
+* If you are captuing live frames from iPhone camera, try to raise `smallestFaceHeight` value to for better face detectio performance
+
+```cpp
+options.smallestFaceHeight = 240;
+```
+
+* The default value of `mobileThreads` aim to balance performance and energy saving, raise to 8 for best performance.
+
+```cpp
+options.mobileThreads = 8;
+```

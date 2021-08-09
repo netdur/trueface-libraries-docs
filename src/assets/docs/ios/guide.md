@@ -14,7 +14,7 @@ We have reverted iOS versioning schema to match with C++ versioning.
 
 ## Install
 
-To install Trueface SDK please download and extract [Trueface SDK 0.28](https://github.com/netdur/trueface-libraries-docs/releases/tag/v0.28.4), then drag the folder trueface.framework into Xcode
+To install Trueface SDK please download and extract [Trueface SDK 0.29](https://github.com/netdur/trueface-libraries-docs/releases/tag/v0.29), then drag the folder trueface.framework into Xcode
 
 ![alt text](assets/images/ios/drag_framework.png)
 
@@ -30,7 +30,7 @@ To use Trueface SDK with Swift, please read [Importing Objective-C into Swift
 You can install Trueface SDK using Cocoapods
 
 ```cpp
-pod 'trueface', '0.28.1-1'
+pod 'trueface', '0.29.0'
 ```
 
 ## Usage
@@ -84,6 +84,46 @@ options.modelsPath = std::string([assets UTF8String]);
 Trueface::SDK *sdk = new Trueface::SDK(options);
 ```
 
+Due to TFV5 requirements, using the model requires 2.6 GB of RAM for CPU or 3.35 GB RAM for GPU, however the model can be used with less memory at cost of performance, iPhone allowe 2 GB max per app, iPad M1 (iOS 15) allows 5 GB or more per app.
+
+In this example, we bind `mobileAvailableMemory` option to `os_proc_available_memory`, to automatically set best options to run TFV5 model:
+
+```cpp
+#include <os/proc.h>
+
+...
+
+Trueface::ConfigurationOptions options;
+options.frModel = Trueface::FacialRecognitionModel::TFV5;
+options.enableGPU.faceRecognizer = false;
+options.mobileThreads = 8;
+options.mobileAvailableMemory = os_proc_available_memory();
+
+NSString *assets = [[NSBundle mainBundle] resourcePath];
+options.modelsPath = std::string([assets UTF8String]);
+
+Trueface::SDK *sdk = new Trueface::SDK(options);
+```
+
+If you are running on iPad with SoC M1, GPU computing will be available:
+
+```cpp
+#include <os/proc.h>
+
+...
+
+Trueface::ConfigurationOptions options;
+options.frModel = Trueface::FacialRecognitionModel::TFV5;
+options.enableGPU.faceRecognizer = true;
+options.mobileThreads = 1;
+options.mobileAvailableMemory = os_proc_available_memory();
+
+NSString *assets = [[NSBundle mainBundle] resourcePath];
+options.modelsPath = std::string([assets UTF8String]);
+
+Trueface::SDK *sdk = new Trueface::SDK(options);
+```
+
 ## Tips
 
 * You can create a group folder to hold assets like models then instruct the SDK to find them as shown below:
@@ -102,18 +142,10 @@ NSString *libraryDirectory = [paths objectAtIndex:0];
 std::string db = std::string([libraryDirectory UTF8String]) + std::string("/test.db");
 ```
 
-* You can enable GPU computing for Face Detection, Face Recognition LITE and LITE_V2, TFV5 with GPU is not supported at moment.
+* You can enable GPU computing for Face Detection, Face Recognition.
 
 ```cpp
 Trueface::ConfigurationOptions options;
-options.frModel = Trueface::FacialRecognitionModel::TFV5;
-options.enableGPU.faceRecognizer = false;
-options.enableGPU.faceDetector = true;
-```
-
-```cpp
-Trueface::ConfigurationOptions options;
-options.frModel = Trueface::FacialRecognitionModel::LITE;
 options.enableGPU.faceRecognizer = true;
 options.enableGPU.faceDetector = true;
 ```

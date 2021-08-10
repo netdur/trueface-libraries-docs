@@ -35,7 +35,7 @@ pod 'trueface', '0.29.0'
 
 ## Usage
 
-The Trueface SDK for iOS has [C++ API](https://reference.trueface.ai/cpp/master/latest/index.html), which can easily be used in your project by adding an `m` to your Objective-C file, for example, rename `ViewController.m` to `ViewController.mm` the import headers:
+The Trueface SDK for iOS has [C++ API](https://reference.trueface.ai/cpp/master/latest/index.html), which can easily be used in your project by adding an `m` to your Objective-C file, for example, rename `ViewController.m` to `ViewController.mm` then import headers:
 
 ```cpp
 #import "ViewController.h"
@@ -84,7 +84,7 @@ options.modelsPath = std::string([assets UTF8String]);
 Trueface::SDK *sdk = new Trueface::SDK(options);
 ```
 
-Due to TFV5 requirements, using the model requires 2.6 GB of RAM for CPU or 3.35 GB RAM for GPU, however the model can be used with less memory at cost of performance, iPhone allowe 2 GB max per app, iPad M1 (iOS 15) allows 5 GB or more per app.
+Due to TFV5 requirements, using the model requires 2.6 GB of RAM for CPU or 3.35 GB RAM for GPU, however the model can be used with less memory at cost of performance, iPhone allows 2 GB max per app, iPad M1 (iOS 15) allows 5 GB or more per app.
 
 In this example, we bind `mobileAvailableMemory` option to `os_proc_available_memory`, to automatically set best options to run TFV5 model:
 
@@ -150,7 +150,7 @@ options.enableGPU.faceRecognizer = true;
 options.enableGPU.faceDetector = true;
 ```
 
-* If you are captuing live frames from iPhone camera, try to raise `smallestFaceHeight` value to for better face detectio performance
+* If you are captuing live frames from iPhone camera, try to raise `smallestFaceHeight` value to for better face detection  performance
 
 ```cpp
 options.smallestFaceHeight = 240;

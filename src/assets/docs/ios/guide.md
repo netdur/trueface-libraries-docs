@@ -33,6 +33,10 @@ You can install Trueface SDK using Cocoapods
 pod 'trueface', '0.29.0'
 ```
 
+Go to General > Frameworks, Libraries, and …
+- add AVFoundation.framework
+- add CoreMedia.framework
+
 ## Usage
 
 The Trueface SDK for iOS has [C++ API](https://reference.trueface.ai/cpp/master/latest/index.html), which can easily be used in your project by adding an `m` to your Objective-C file, for example, rename `ViewController.m` to `ViewController.mm` then import headers:

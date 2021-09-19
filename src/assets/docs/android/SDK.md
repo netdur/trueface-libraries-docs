@@ -139,6 +139,15 @@ The face detector has a detection scale range of about 5 octaves. \ref Configura
 
  * **Returns:** a vector of bounding box and landmarks.
 
+## `public Point[] getFaceLandmarks(FaceBoxAndLandmarks faceBoxAndLandmarks)`
+
+Obtain the 106 face landmarks.
+
+ * **Parameters:** `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
+
+     <p>
+ * **Returns:** landmarks an array of 106 face landmark points.
+
 ## `public Faceprint getLargestFaceFeatureVector()`
 
 Detect the largest face in the image and return its feature vector.
@@ -169,12 +178,13 @@ Estimate the head pose.
  * **Returns:** EstimateHeadOrientation
  * **See also:** EstimateHeadOrientation
 
-## `@Deprecated public BlinkDetection detectBlink()`
+## `public BlinkState detectBlink(FaceBoxAndLandmarks faceBoxAndLandmarks)`
 
 Estimate score for eye blink.
 
- * **Returns:** BlinkDetection
- * **See also:** BlinkDetection
+ * **Parameters:** `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
+ * **Returns:** BlinkState
+ * **See also:** BlinkState
 
 ## `@Deprecated public Spoof detectSpoof(FaceBoxAndLandmarks faceBoxAndLandmarks, float threshold)`
 
@@ -208,6 +218,31 @@ Create a new collection, or load data from an existing collection into memory (R
 
      #see ErrorCode
 
+## `public ErrorCode createCollection(String collectionName)`
+
+Create a new collection in the database. Before enrolling Faceprints into newly created collection, must call loadCollection(). If the collection with the provided name already exists, this is a harmless no-op.
+
+ * **Parameters:** `collectionName` — the name of the collection.
+ * **Returns:** error code, see ErrorCode.
+
+## `public ErrorCode loadCollection(String collectionName)`
+
+Loads the collection into memory. Must be called before enrolling Faceprints or calling identification functions.
+
+ * **Parameters:** `collectionName` — the name of the collection to load into memory.
+ * **Returns:** error code, see ErrorCode.
+
+     Will return an error if the collection does not exist.
+
+## `public ErrorCode deleteCollection(String collectionName)`
+
+Deletes a collection from the current database.
+
+ * **Parameters:** `collectionName` — the name of the collection to delete.
+ * **Returns:** error code, see ErrorCode.
+
+     Will return an error if the collection does not exist.
+
 ## `public String enrollFaceprint(Faceprint faceprint, String identity)`
 
 Enroll a template for a new or existing identity in the collection.
@@ -216,6 +251,28 @@ Enroll a template for a new or existing identity in the collection.
    * `faceprint` — the template to enroll in the collection.
    * `identity` — the identity corresponding to the template.
  * **Returns:** UUID universally unique identifier corresponding to the template.
+
+## `public String[] getCollectionNames()`
+
+Get a list of the names of all the collections in the database. Collection names can then be passed to getCollectionMetadata() and getCollectionIdentities().
+
+ * **Returns:** list of collection names in the database.
+
+## `public CollectionMetadata getCollectionMetadata(String collectionName)`
+
+Get the metadata for the specified collection in the database, loaded or unloaded.
+
+ * **Parameters:** `collectionName` — the name of the collection for which to retrieve the metadata.
+ * **Returns:** metadata the metadata for the specified collection.
+
+## `public HashMap<String, String> getCollectionIdentities(String collectionName)`
+
+Get a map of identities and UUIDs for the specified collection in the database, loaded or unloaded. This can be a slow operation (especially for unloaded collections), call sparingly.
+
+ * **Parameters:** `collectionName` — the name of the collection for which to retrieve the identities.
+
+     There can be multiple UUIDs mapped to a single identity if multiple Faceprints were enrolled for that identity.
+ * **Returns:** identities a map of identities and corresponding UUIDs.
 
 ## `public ErrorCode removeByUUID(String UUID)`
 

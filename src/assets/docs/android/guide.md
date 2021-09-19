@@ -192,7 +192,7 @@ If the object detection operation succeeds, a list of `BoundingBox` objects are 
 ```Java
 BoundingBox[] boundingBoxs = sdk.detectObjects();
 for (BoundingBox boundingBox: boundingBoxs) {
-  sdk.getObjectLabelString(boundingBox.label);
+  String label = sdk.getObjectLabelString(boundingBox.label);
   Log.d(TAG, String.valueOf(boundingBox.label)); 
 }
 ```
@@ -248,7 +248,10 @@ for (Pair<String, String> pair: list) {
   sdk.setImage(bitmap);
   Faceprint faceprint = sdk.getLargestFaceFeatureVector();
   if (faceprint != null) {
-    sdk.enrollFaceprint(faceprint, pair.second);
+    String uuid = sdk.enrollFaceprint(faceprint, pair.second);
+    if (uuid == null) {
+      // handle error
+    }
   }
 }
 ```

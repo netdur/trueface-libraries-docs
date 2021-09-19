@@ -1,6 +1,6 @@
 ## Setup
 
-Download [Trueface SDK 3.2.1](https://github.com/netdur/trueface-libraries-docs/releases/tag/v3.2.1) and include AAR file using Gradle, first use Android Studio menu:
+Download [Trueface SDK 3.2.4](https://github.com/netdur/trueface-libraries-docs/releases/tag/v3.2.4) and include AAR file using Gradle, first use Android Studio menu:
 
 ```
 File -> New -> New Module -> Import .jar/.aar and import your .aar.
@@ -39,22 +39,7 @@ android {
 }
 ```
 
-You can also exclude Spoof model (deprecated) and / or facial recognition full model:
-
-```kotlin
-android {
-  ...
-  buildTypes {
-    release {
-      aaptOptions {
-        ignoreAssetsPattern '!spoof_v5.trueface.enc:!face_recognition_cpu_v5.trueface.enc:'
-      }
-    }
-  }
-}
-```
-
-If your application depends on OpenCV library, you can instruct Gralde to bundle only single version:
+If your application depends on OpenCV library, you can instruct Gradle to bundle only single version:
 
 ```kotlin
 android {
@@ -67,3 +52,23 @@ android {
   }
 }
 ```
+
+## Models
+
+In order to use models of interest, please download and put inside assets folder:
+
+* [body pose estimator v1](https://storage.googleapis.com/sdk-models/enc/body_pose_estimator/v1/body_pose_estimator_v1.trueface.enc)
+
+* [face recognition v4](https://storage.googleapis.com/sdk-models/enc/face_recognition/cpu/face_recognition_cpu_v4.trueface.enc)
+
+* [face recognition v5](https://storage.googleapis.com/sdk-models/enc/face_recognition/cpu/face_recognition_cpu_v5.trueface.enc)
+
+* [face recognition lite v2](https://storage.googleapis.com/sdk-models/enc/face_recognition/cpu/face_recognition_cpu_lite_v2.trueface.enc)
+
+* [face landmark detector v2](https://storage.googleapis.com/sdk-models/enc/landmark_detection/face_landmark_detector_v2.trueface.enc)
+
+* [blink detector v1](https://storage.googleapis.com/sdk-models/enc/blink/blink_detector_v1.trueface.enc)
+
+* [object detector v1](https://storage.googleapis.com/sdk-models/enc/object_detection/object_detector_v1.trueface.enc)
+
+* [spoof v5](https://storage.googleapis.com/sdk-models/enc/spoof/v5/spoof_v5.trueface.enc)

@@ -10,7 +10,6 @@
 1. [EstimateHeadOrientation](/doc/android/EstimateHeadOrientation)
 1. [FaceBoxAndLandmarks](/doc/android/FaceBoxAndLandmarks)
 1. [FaceDetectionFilter](/doc/android/FaceDetectionFilter)
-1. [FaceDetectionMode](/doc/android/FaceDetectionMode)
 1. [Faceprint](/doc/android/Faceprint)
 1. [FacialRecognitionModel](/doc/android/FacialRecognitionModel)
 1. [GlassesLabel](/doc/android/GlassesLabel)

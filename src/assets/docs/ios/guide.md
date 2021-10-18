@@ -14,7 +14,7 @@ We have reverted iOS versioning schema to match with C++ versioning.
 
 ## Install
 
-To install Trueface SDK please download and extract [Trueface SDK 0.32](https://github.com/netdur/trueface-libraries-docs/releases/tag/v0.32), then drag the folder trueface.framework into Xcode
+To install Trueface SDK please download and extract [Trueface SDK 0.32-1](https://github.com/netdur/trueface-libraries-docs/releases/tag/v0.32-1), then drag the folder trueface.framework into Xcode
 
 ![alt text](assets/images/ios/drag_framework.png)
 
@@ -22,20 +22,58 @@ Also make sure to check `Copy items if needed` and your targets
 
 ![alt text](assets/images/ios/adding_options.png)
 
-To use Trueface SDK with Swift, please read [Importing Objective-C into Swift
-](https://developer.apple.com/documentation/swift/imported_c_and_objective-c_apis/importing_objective-c_into_swift)
+### Objective-C and Swift
+
+Full binding for Objective-C and Swift are available by importing `trueface/tf_sdk_binding.h` header, to use Trueface SDK with Swift create bridge header:
+
+* Create a new Objective C file in your project (File > New > File [Objective C for iOS]).
+* Accept the prompt (agree) to create a bridging header file between Objective C and Swift.
+* Delete your newly created Objective C file but retain the bridging header file ${YOURPROJ}-Bridging-Header.h.
+
+In the Bridging header file, import Trueface framework using the standard Objective C import syntax.
+
+`#import <trueface/tf_sdk_binding.h>`
+
+Go to General > Frameworks, Libraries, and …
+- add AVFoundation.framework
+- add CoreMedia.framework
+- add `libc++.1.tdb`, `libc++.tdb` and `libc++abi.tdb`
+
+Example of Swift code:
+
+```Swift
+import SwiftUI
+
+var options = TFConfigurationOptions()
+var sdk = TFSDK(configurationOptions: options)
+var ver = sdk?.getVersion()
+
+struct ContentView: View {
+    var body: some View {
+        Text(ver!)
+            .padding()
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
+```
 
 ### Cocoapods
 
 You can install Trueface SDK using Cocoapods
 
 ```cpp
-pod 'trueface', '0.32.0'
+pod 'trueface', '0.32.1'
 ```
 
 Go to General > Frameworks, Libraries, and …
 - add AVFoundation.framework
 - add CoreMedia.framework
+- add `libc++.1.tdb`, `libc++.tdb` and `libc++abi.tdb`
 
 ## Usage
 

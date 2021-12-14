@@ -1,4 +1,4 @@
-# SDK
+# Documentation
 
 ## `public SDK(Context context)`
 
@@ -116,6 +116,12 @@ Detect people and objects in the image.
  * **Returns:** a vector of BoundingBox objects that gets populated with the detected objects.
  * **See also:** this.getObjectLabelString
 
+## `public ImageProperties getImageProperties()`
+
+Get properties of the image set by setImage().
+
+ * **Parameters:** `[out]` — imageProperties the image properties
+
 ## `public String getObjectLabelString(ObjectLabel label)`
 
 Converts an object label to a String. This can be used to display the object labels.
@@ -185,6 +191,37 @@ Estimate score for eye blink.
  * **Parameters:** `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
  * **Returns:** BlinkState
  * **See also:** BlinkState
+
+## `public ErrorCode checkSpoofImageFaceSize(FaceBoxAndLandmarks faceBoxAndLandmarks, ImageProperties imageProperties, ActiveSpoofStage activeSpoofStage)`
+
+Ensures that the face size meets the requirements for active spoof. Must check return value of function! Active spoof works by analyzing the way a persons face changes as they move closer to a camera. The active spoof solution therefore expects the face a certain distance from the camera. **In the far image, the face should be about 18 inches from the camera, while in the near image, the face should be 7-8 inches from the camera.**
+
+This function must be called before calling detectActiveSpoof().
+
+ * **Parameters:**
+   * `faceBoxAndLandmarks` — The face on which to run active spoof detection.
+   * `imageProperties` — The properties of the image, obtained from getImageProperties().
+   * `activeSpoofStage` — The stage of the image, either near stage or far stage.
+ * **Returns:** error code, see ErrorCode.
+
+     If `ErrorCode::NO_ERROR` is returned, then the image is eligible for active spoof detection.
+
+     If `ErrorCode::FACE_TOO_CLOSE` or `ErrorCode::FACE_TOO_FAR` is returned, the image is not eligible for active spoof detection.
+
+     <p>
+
+## `public Spoof detectActiveSpoof(Point[] nearFaceLandmarks, Point[] farFaceLandmarks)`
+
+Detect if there is a presentation attack attempt. Must call checkSpoofImageFaceSize() on both input faces before calling this function.
+
+ * **Parameters:**
+   * `nearFaceLandmarks` — The face landmarks of the near face, obtained by calling getFaceLandmarks().
+   * `farFaceLandmarks` — The face landmarks of the far face, obtained by calling getFaceLandmarks().
+ * **Returns:** Spoof The predicted spoof result, using a spoofScore threshold of 1.05.
+
+     If the spoof score is above the threshold, then it is classified as a real face.
+
+     If the spoof score is below the threshold, then it is classified as a fake face.
 
 ## `@Deprecated public Spoof detectSpoof(FaceBoxAndLandmarks faceBoxAndLandmarks, float threshold)`
 

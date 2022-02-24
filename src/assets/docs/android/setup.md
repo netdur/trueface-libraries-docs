@@ -71,4 +71,4 @@ In order to use models of interest, please download and put inside assets folder
 
 * [object detector v1](https://storage.googleapis.com/sdk-models/enc/object_detection/object_detector_v1.trueface.enc)
 
-* [spoof v5](https://storage.googleapis.com/sdk-models/enc/spoof/v5/spoof_v5.trueface.enc)
+* [spoof v2](https://storage.googleapis.com/sdk-models/enc/spoof/v5/spoof_v2.trueface.enc)

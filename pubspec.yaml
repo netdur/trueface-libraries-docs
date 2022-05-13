@@ -1,0 +1,46 @@
+name: trueface_libraries_docs
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.2 <3.0.0"
+
+dependencies:
+  flutter_web_plugins:
+    sdk: flutter
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^1.0.3
+  responsive_builder: ^0.4.2
+  flutter_markdown: ^0.6.10
+  url_launcher: ^6.1.0
+  google_fonts: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/v1.1/
+    - assets/v1.1/images/
+    - assets/v1.1/android/
+    - assets/v1.1/c/
+    - assets/v1.1/dotnet/
+    - assets/v1.1/ios/
+    - assets/v1.1/ios/images/
+    - assets/v0.8/
+    - assets/v0.8/images/
+    - assets/v0.8/android/
+    - assets/v0.8/c/
+    - assets/v0.8/dotnet/
+    - assets/v0.8/ios/
+    - assets/v0.8/ios/images/

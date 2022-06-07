@@ -64,6 +64,13 @@ class _SideBarState extends State<SideBar> {
           ),
         ),
         ListTile(
+          title: const Text('Hardware Requirements'),
+          onTap: () => Navigator.pushNamed(
+            context,
+            'doc?md=/${SideBar.version}/requirements.md&title=Hardware Requirements',
+          ),
+        ),
+        ListTile(
           title: Text('Android', style: Theme.of(context).textTheme.caption),
         ),
         ListTile(

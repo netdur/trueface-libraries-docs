@@ -12,9 +12,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  String? _selectedItem;
-
-  String? _selectedRoute;
 
   bool show404 = false;
 
@@ -61,19 +58,6 @@ class _AppState extends State<App> {
         return null;
       },
     );
-  }
-
-  void _handleItemTapped(String item) {
-    setState(() {
-      _selectedItem = item;
-    });
-  }
-
-  void _handleRouteTapped(String route) {
-    setState(() {
-      _selectedItem = null;
-      _selectedRoute = route;
-    });
   }
 }
 

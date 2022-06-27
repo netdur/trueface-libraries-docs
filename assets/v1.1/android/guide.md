@@ -99,6 +99,13 @@ if (userRotation == 90) {
 }
 ```
 
+# IMPORTANT
+Please destroy Image object after usage
+```java
+image.destroy();
+```
+
+
 ## Process the image
 
 Once you have constructed Trueface SDK, provided license and set image, you can now process image with one of several SDK calls:

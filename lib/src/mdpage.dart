@@ -60,8 +60,8 @@ class _MDPageState extends State<MDPage> {
       body: SingleChildScrollView(
           controller: controller,
           child: FutureBuilder(
-              // future: rootBundle.loadString('assets/${widget.md}'),
-              future: rootBundle.loadString('${widget.md}'),
+              future: rootBundle.loadString('assets/${widget.md}'),
+              // future: rootBundle.loadString('${widget.md}'),
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.hasData) {
                   ThemeData theme = Theme.of(context);

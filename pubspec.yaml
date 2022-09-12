@@ -30,6 +30,31 @@ flutter:
 
   assets:
     - assets/
+
+    - assets/v1.4/
+    - assets/v1.4/images/
+    - assets/v1.4/android/
+    - assets/v1.4/c/
+    - assets/v1.4/dotnet/
+    - assets/v1.4/ios/
+    - assets/v1.4/ios/images/
+
+    - assets/v1.3/
+    - assets/v1.3/images/
+    - assets/v1.3/android/
+    - assets/v1.3/c/
+    - assets/v1.3/dotnet/
+    - assets/v1.3/ios/
+    - assets/v1.3/ios/images/
+
+    - assets/v1.2/
+    - assets/v1.2/images/
+    - assets/v1.2/android/
+    - assets/v1.2/c/
+    - assets/v1.2/dotnet/
+    - assets/v1.2/ios/
+    - assets/v1.2/ios/images/
+
     - assets/v1.1/
     - assets/v1.1/images/
     - assets/v1.1/android/
@@ -37,6 +62,7 @@ flutter:
     - assets/v1.1/dotnet/
     - assets/v1.1/ios/
     - assets/v1.1/ios/images/
+
     - assets/v0.8/
     - assets/v0.8/images/
     - assets/v0.8/android/

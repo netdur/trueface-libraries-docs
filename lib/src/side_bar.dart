@@ -4,14 +4,14 @@ import 'package:flutter_svg/svg.dart';
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
 
-  static String version = 'v1.1';
+  static String version = 'v1.4';
 
   @override
   State<SideBar> createState() => _SideBarState();
 }
 
 class _SideBarState extends State<SideBar> {
-  var versions = ['v0.8', 'v1.1', 'v1.3'];
+  var versions = ['v0.8', 'v1.1', 'v1.3', 'v1.4'];
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +68,13 @@ class _SideBarState extends State<SideBar> {
           onTap: () => Navigator.pushNamed(
             context,
             'doc?md=/${SideBar.version}/requirements.md&title=Hardware Requirements',
+          ),
+        ),
+        ListTile(
+          title: const Text('Models'),
+          onTap: () => Navigator.pushNamed(
+            context,
+            'doc?md=/${SideBar.version}/models.md&title=Models',
           ),
         ),
         ListTile(

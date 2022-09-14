@@ -18,6 +18,6 @@ In order to use models of interest, please download and put inside assets folder
 
 * [object detector v1](https://storage.googleapis.com/sdk-models/enc/object_detection/object_detector_v1.trueface.enc)
 
-* [spoof v4](https://storage.googleapis.com/sdk-models/enc/spoof/v2/spoof_v4.trueface.enc)
+* [spoof v4](https://storage.googleapis.com/sdk-models/enc/spoof/v4/spoof_v4.trueface.enc)
 
 * [mask detector v3](https://storage.googleapis.com/sdk-models/enc/mask/mask_detector_cpu_v3.trueface.enc)

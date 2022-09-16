@@ -1,6 +1,6 @@
 ## Install
 
-To install Trueface SDK please download and extract [Trueface SDK 1.3](https://github.com/netdur/trueface-libraries-docs/releases/tag/v1.3), then drag the folder trueface.framework into Xcode
+To install Trueface SDK please download and extract [Trueface SDK 1.4](https://github.com/netdur/trueface-libraries-docs/releases/tag/v1.4%2B1), then drag the folder trueface.framework into Xcode
 
 ![alt text](assets/assets/v1.1/ios/images/drag_framework.png)
 

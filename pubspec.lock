@@ -103,7 +103,7 @@ packages:
       name: flutter_markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.10"
+    version: "0.6.12"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -162,7 +162,7 @@ packages:
       name: markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "6.0.1"
   matcher:
     dependency: transitive
     description:
@@ -428,5 +428,5 @@ packages:
     source: hosted
     version: "5.3.1"
 sdks:
-  dart: ">=2.17.0-0 <3.0.0"
-  flutter: ">=2.10.0"
+  dart: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"

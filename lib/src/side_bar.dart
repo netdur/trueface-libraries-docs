@@ -11,7 +11,7 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  var versions = ['v0.8', 'v1.1', 'v1.3', 'v1.4'];
+  var versions = ['v0.8', 'v1.1', 'v1.3', 'v1.4', 'v1.5'];
 
   @override
   Widget build(BuildContext context) {

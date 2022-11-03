@@ -18,15 +18,13 @@
 
 * Models disk and memory usage table:
 ```
-
-    | Model     | Disk usage | Memory usage |
-    |-----------|------------|--------------|
-    | Lite      | 0 MB       | 240 MB¹      |
-    | Lite v2   | 15 MB      | 316 MB¹      |
-    | TFV5 CPU² | 248 MB     | 0.8 GB¹      |
-    | TFV5 CPU  | 248 MB     | 2.8 GB¹      |
-    | TFV5 GPU  | 248 MB     | 3.4 GB¹      |
-
+| Model     | Disk usage | Memory usage |
+|-----------|------------|--------------|
+| Lite      | 0 MB       | 240 MB¹      |
+| Lite v2   | 15 MB      | 316 MB¹      |
+| TFV5 CPU² | 248 MB     | 0.8 GB¹      |
+| TFV5 CPU  | 248 MB     | 2.8 GB¹      |
+| TFV5 GPU  | 248 MB     | 3.4 GB¹      |
 ```
 
 1 - Combains SDK, face detector, image and model memory usage

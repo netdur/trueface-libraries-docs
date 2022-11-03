@@ -27,5 +27,6 @@
 | TFV5 GPU  | 248 MB     | 3.4 GB¹      |
 ```
 
-1 - Combains SDK, face detector, image and model memory usage
+1 - Combines SDK, face detector, image and model memory usage
+
 2 - With mobileMemorySave Enabled

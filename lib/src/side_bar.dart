@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
 
-  static String version = 'v1.4';
+  static String version = 'v1.5';
 
   @override
   State<SideBar> createState() => _SideBarState();

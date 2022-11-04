@@ -6,7 +6,7 @@ Versioning schema would be major+3.minor+build The method `getSDKVersion` return
 
 ## Setup
 
-Download [Trueface SDK 4.4+1](https://github.com/netdur/trueface-libraries-docs/releases/tag/v4.4%2B1) and include AAR file using Gradle, first use Android Studio menu:
+Download [Trueface SDK 4.5+1](https://github.com/netdur/trueface-libraries-docs/releases/tag/v4.5%2B1) and include AAR file using Gradle, first use Android Studio menu:
 
 ```
 File -> New -> New Module -> Import .jar/.aar and import your .aar.

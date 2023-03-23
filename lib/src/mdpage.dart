@@ -70,12 +70,11 @@ class _MDPageState extends State<MDPage> {
                       child: MarkdownBody(
                           styleSheet: MarkdownStyleSheet.fromTheme(theme)
                               .copyWith(
-                                  codeblockPadding:
-                                      const EdgeInsets.all(12),
+                                  codeblockPadding: const EdgeInsets.all(12),
                                   code: GoogleFonts.ubuntuMono(fontSize: 14.0),
                                   h2Padding: const EdgeInsets.only(top: 12),
                                   pPadding: const EdgeInsets.only(top: 12),
-                                  p: theme.textTheme.bodyText1
+                                  p: theme.textTheme.bodyLarge
                                       ?.copyWith(fontSize: 14.0)),
                           extensionSet: md.ExtensionSet(
                             [

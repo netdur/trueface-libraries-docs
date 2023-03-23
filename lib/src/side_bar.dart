@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'dart:ui' as ui;
 
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
 
-  static String version = 'v1.5';
+  static String version = 'v1.6';
 
   @override
   State<SideBar> createState() => _SideBarState();
 }
 
 class _SideBarState extends State<SideBar> {
-  var versions = ['v0.8', 'v1.1', 'v1.3', 'v1.4', 'v1.5'];
+  var versions = ['v0.8', 'v1.1', 'v1.3', 'v1.4', 'v1.5', 'v1.6'];
 
   @override
   Widget build(BuildContext context) {
     final Widget svg = SvgPicture.asset('assets/trueface_white.svg',
-        color: Colors.white, semanticsLabel: 'Trueface Logo');
+        colorFilter: const ui.ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        semanticsLabel: 'Trueface Logo');
 
     return Drawer(
         child: ListView(
@@ -40,8 +42,8 @@ class _SideBarState extends State<SideBar> {
           ),
         ),
         ListTile(
-          title:
-              Text('Get Started', style: Theme.of(context).textTheme.caption),
+          title: Text('Get Started',
+              style: Theme.of(context).textTheme.labelMedium),
         ),
         ListTile(
             title: const Text('Overview'),
@@ -78,7 +80,8 @@ class _SideBarState extends State<SideBar> {
           ),
         ),
         ListTile(
-          title: Text('Android', style: Theme.of(context).textTheme.caption),
+          title:
+              Text('Android', style: Theme.of(context).textTheme.labelMedium),
         ),
         ListTile(
             title: const Text('Setup'),
@@ -99,23 +102,37 @@ class _SideBarState extends State<SideBar> {
                   'doc?md=/${SideBar.version}/android/reference.md&title=Reference',
                 )),
         ListTile(
-          title: Text('NET C#', style: Theme.of(context).textTheme.caption),
+          title: Text('C', style: Theme.of(context).textTheme.labelMedium),
         ),
         ListTile(
           title: const Text('Guide'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/dotnet/guide.md&title=.Net',
+            'doc?md=/${SideBar.version}/c/guide.md&title=C',
           ),
         ),
         ListTile(
-          title: Text('iOS', style: Theme.of(context).textTheme.caption),
+          title: Text('iOS', style: Theme.of(context).textTheme.labelMedium),
         ),
         ListTile(
           title: const Text('Guide'),
           onTap: () => Navigator.pushNamed(
             context,
             'doc?md=/${SideBar.version}/ios/guide.md&title=iOS',
+          ),
+        ),
+        ListTile(
+          title: const Text('Objective-c'),
+          onTap: () => Navigator.pushNamed(
+            context,
+            'doc?md=/${SideBar.version}/ios/objc.md&title=iOS Objective-c',
+          ),
+        ),
+        ListTile(
+          title: const Text('Swift'),
+          onTap: () => Navigator.pushNamed(
+            context,
+            'doc?md=/${SideBar.version}/ios/swift.md&title=iOS Swift',
           ),
         ),
         Padding(

@@ -12,14 +12,15 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenTypeLayout(
-      breakpoints:
-          const ScreenBreakpoints(desktop: 900, tablet: 650, watch: 250),
-      mobile: OrientationLayoutBuilder(
-          portrait: (context) => ScreenMobilePortrait(md: md, title: title),
-          landscape: (context) => ScreenMobileLandscape(md: md, title: title)),
-      tablet: ScreenViewTablet(md: md, title: title),
-    );
+    return ScreenTypeLayout.builder(
+        breakpoints:
+            const ScreenBreakpoints(desktop: 900, tablet: 650, watch: 250),
+        mobile: (BuildContext context) => OrientationLayoutBuilder(
+            portrait: (context) => ScreenMobilePortrait(md: md, title: title),
+            landscape: (context) =>
+                ScreenMobileLandscape(md: md, title: title)),
+        tablet: (BuildContext context) =>
+            ScreenViewTablet(md: md, title: title));
   }
 }
 

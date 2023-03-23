@@ -6,30 +6,39 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
+  sdk: '>=2.19.4 <3.0.0'
 
 dependencies:
   flutter_web_plugins:
     sdk: flutter
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  flutter_svg: ^1.0.3
-  responsive_builder: ^0.4.2
-  flutter_markdown: ^0.6.12
-  url_launcher: ^6.1.0
-  google_fonts: ^2.3.2
+  cupertino_icons: ^1.0.5
+  flutter_svg: ^2.0.4
+  responsive_builder: ^0.6.4
+  flutter_markdown: ^0.6.14
+  url_launcher: ^6.1.10
+  google_fonts: ^4.0.3
+  markdown: ^7.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
 
   assets:
     - assets/
+
+    - assets/v1.6/
+    - assets/v1.6/images/
+    - assets/v1.6/android/
+    - assets/v1.6/c/
+    - assets/v1.6/dotnet/
+    - assets/v1.6/ios/
+    - assets/v1.6/ios/images/
 
     - assets/v1.5/
     - assets/v1.5/images/
@@ -54,14 +63,6 @@ flutter:
     - assets/v1.3/dotnet/
     - assets/v1.3/ios/
     - assets/v1.3/ios/images/
-
-    - assets/v1.2/
-    - assets/v1.2/images/
-    - assets/v1.2/android/
-    - assets/v1.2/c/
-    - assets/v1.2/dotnet/
-    - assets/v1.2/ios/
-    - assets/v1.2/ios/images/
 
     - assets/v1.1/
     - assets/v1.1/images/

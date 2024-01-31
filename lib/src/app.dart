@@ -12,7 +12,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-
   bool show404 = false;
 
   @override
@@ -51,7 +50,7 @@ class _AppState extends State<App> {
           String md = uri.queryParameters['md']!;
           String title = uri.queryParameters['title'] ?? '...';
           return MaterialPageRoute(
-            settings: RouteSettings(name: 'doc?md=$md&title=$title'),
+            settings: RouteSettings(name: '/doc?md=$md&title=$title'),
             builder: (context) => Screen(md: md, title: title),
           );
         }

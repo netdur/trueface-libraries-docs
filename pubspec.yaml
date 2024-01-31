@@ -6,20 +6,19 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter_web_plugins:
     sdk: flutter
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.5
-  flutter_svg: ^2.0.4
-  responsive_builder: ^0.6.4
-  flutter_markdown: ^0.6.14
-  url_launcher: ^6.1.10
-  google_fonts: ^4.0.3
-  markdown: ^7.0.1
+  flutter_svg: ^2.0.9
+  responsive_builder: ^0.7.0
+  flutter_markdown: ^0.6.18+3
+  url_launcher: ^6.2.4
+  google_fonts: ^6.1.0
+  markdown: ^7.2.1
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +30,14 @@ flutter:
 
   assets:
     - assets/
+
+    - assets/v2.4/
+    - assets/v2.4/images/
+    - assets/v2.4/android/
+    - assets/v2.4/c/
+    - assets/v2.4/dotnet/
+    - assets/v2.4/ios/
+    - assets/v2.4/ios/images/
 
     - assets/v2.1/
     - assets/v2.1/images/

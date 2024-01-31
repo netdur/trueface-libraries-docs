@@ -5,14 +5,23 @@ import 'dart:ui' as ui;
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
 
-  static String version = 'v2.1';
+  static String version = 'v2.4';
 
   @override
   State<SideBar> createState() => _SideBarState();
 }
 
 class _SideBarState extends State<SideBar> {
-  var versions = ['v0.8', 'v1.1', 'v1.3', 'v1.4', 'v1.5', 'v1.6', 'v2.1'];
+  var versions = [
+    'v0.8',
+    'v1.1',
+    'v1.3',
+    'v1.4',
+    'v1.5',
+    'v1.6',
+    'v2.1',
+    'v2.4'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -49,34 +58,34 @@ class _SideBarState extends State<SideBar> {
             title: const Text('Overview'),
             onTap: () => Navigator.pushNamed(
                   context,
-                  'doc?md=/${SideBar.version}/overview.md&title=Overview',
+                  '/doc?md=/${SideBar.version}/overview.md&title=Overview',
                 )),
         ListTile(
           title: const Text('Concepts'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/concepts.md&title=Concepts',
+            '/doc?md=/${SideBar.version}/concepts.md&title=Concepts',
           ),
         ),
         ListTile(
           title: const Text('Samples'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/samples.md&title=Samples',
+            '/doc?md=/${SideBar.version}/samples.md&title=Samples',
           ),
         ),
         ListTile(
           title: const Text('Hardware Requirements'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/requirements.md&title=Hardware Requirements',
+            '/doc?md=/${SideBar.version}/requirements.md&title=Hardware Requirements',
           ),
         ),
         ListTile(
           title: const Text('Models'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/models.md&title=Models',
+            '/doc?md=/${SideBar.version}/models.md&title=Models',
           ),
         ),
         ListTile(
@@ -87,30 +96,30 @@ class _SideBarState extends State<SideBar> {
             title: const Text('Setup'),
             onTap: () => Navigator.pushNamed(
                   context,
-                  'doc?md=/${SideBar.version}/android/setup.md&title=Setup',
+                  '/doc?md=/${SideBar.version}/android/setup.md&title=Setup',
                 )),
         ListTile(
             title: const Text('Guide'),
             onTap: () => Navigator.pushNamed(
                   context,
-                  'doc?md=/${SideBar.version}/android/guide.md&title=Guide',
+                  '/doc?md=/${SideBar.version}/android/guide.md&title=Guide',
                 )),
         ListTile(
             title: const Text('Reference'),
             onTap: () => Navigator.pushNamed(
                   context,
-                  'doc?md=/${SideBar.version}/android/reference.md&title=Reference',
+                  '/doc?md=/${SideBar.version}/android/reference.md&title=Reference',
                 )),
-        ListTile(
+        /*ListTile(
           title: Text('C', style: Theme.of(context).textTheme.labelMedium),
         ),
         ListTile(
           title: const Text('Guide'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/c/guide.md&title=C',
+            '/doc?md=/${SideBar.version}/c/guide.md&title=C',
           ),
-        ),
+        ),*/
         ListTile(
           title: Text('iOS', style: Theme.of(context).textTheme.labelMedium),
         ),
@@ -118,23 +127,23 @@ class _SideBarState extends State<SideBar> {
           title: const Text('Guide'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/ios/guide.md&title=iOS',
+            '/doc?md=/${SideBar.version}/ios/guide.md&title=iOS',
           ),
         ),
         ListTile(
-          title: const Text('Objective-c'),
+          title: const Text('Objective-C / Swift'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/ios/objc.md&title=iOS Objective-c',
+            '/doc?md=/${SideBar.version}/ios/objc.md&title=iOS Objective-C / Swift',
           ),
         ),
-        ListTile(
+        /*ListTile(
           title: const Text('Swift'),
           onTap: () => Navigator.pushNamed(
             context,
-            'doc?md=/${SideBar.version}/ios/swift.md&title=iOS Swift',
+            '/doc?md=/${SideBar.version}/ios/swift.md&title=iOS Swift',
           ),
-        ),
+        ),*/
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
           child: Row(children: [

@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
 
-  static String version = 'v2.4';
+  static String version = 'v3.0';
 
   @override
   State<SideBar> createState() => _SideBarState();
@@ -20,7 +20,8 @@ class _SideBarState extends State<SideBar> {
     'v1.5',
     'v1.6',
     'v2.1',
-    'v2.4'
+    'v2.4',
+    'v3.0'
   ];
 
   @override

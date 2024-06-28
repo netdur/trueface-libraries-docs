@@ -31,6 +31,14 @@ flutter:
   assets:
     - assets/
 
+    - assets/v3.0/
+    - assets/v3.0/images/
+    - assets/v3.0/android/
+    - assets/v3.0/c/
+    - assets/v3.0/dotnet/
+    - assets/v3.0/ios/
+    - assets/v3.0/ios/images/
+
     - assets/v2.4/
     - assets/v2.4/images/
     - assets/v2.4/android/

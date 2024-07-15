@@ -2,7 +2,7 @@
 
 To install the Trueface SDK, please follow these steps:
 
-1. Download and extract [Trueface SDK 2.4](https://github.com/netdur/trueface-libraries-docs/releases/tag/v2.4).
+1. Download and extract [Trueface SDK 3.0](https://github.com/netdur/trueface-libraries-docs/releases/tag/v3.0).
 2. Drag the folder `trueface.xcframework` into Xcode.
 
    ![Drag Framework](assets/assets/v1.6/ios/images/drag_framework.png)
@@ -59,7 +59,7 @@ struct ContentView_Previews: PreviewProvider {
 Install the Trueface SDK using CocoaPods:
 
 ```cpp
-pod 'trueface', '2.4'
+pod 'trueface', '3.0'
 ```
 
 Add the required frameworks and libraries:

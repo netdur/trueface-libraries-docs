@@ -10,11 +10,7 @@ The versioning schema follows the pattern: major + 3.minor + build. To retrieve 
 ## Setup
 To set up the Trueface SDK in your Android project, follow these steps:
 
-0. Download the **beta** [Trueface SDK 5.3.0+1](https://github.com/netdur/trueface-libraries-docs/releases/tag/vv5.3.0%2B1) AAR file.
-
-or
-
-1. Download the [Trueface SDK 4.5+1](https://github.com/netdur/trueface-libraries-docs/releases/tag/v4.5%2B1) AAR file.
+1. Download the **beta** [Trueface SDK 5.3.0+2](https://github.com/netdur/trueface-libraries-docs/releases/tag/v5.3.0%2B2) AAR file.
 
 2. Import the AAR file using Android Studio:
 

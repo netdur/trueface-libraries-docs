@@ -1,61 +1,89 @@
 # ConfigurationOptions
 
-# Documentation
-
 ## `public class ConfigurationOptions`
 
-SDK configuration options
+SDK configuration options for setting up various aspects of the Trueface SDK.
 
-## `public int mobilePowerSave = 0`
+### Fields
 
-**Android Only**
+#### `public boolean useCoreML = false`
 
-Power saving mode. 0 = all cores enabled (default). 1 = only little clusters enabled. 2 = only big clusters enabled.
+Provider option CoreML / Apple devices.
 
-## `public int mobileThreads = 4`
+#### `public boolean useNNAPI = false`
 
-**Mobile Only**
+Provider option NNAPI / Android.
 
-Set the number of threads used for inference. For non-mobile platforms, should use the ``OMP_NUM_THREADS`` environment variable.
+#### `public FacialRecognitionModel frModel = FacialRecognitionModel.TFV5_2`
 
-## `private long mobileAvailableMemory = 0`
+The model to be used for facial recognition (default is TFV5_2).
 
-**iOS Only**
+#### `public FaceDetectionModel fdModel = FaceDetectionModel.FAST`
 
-SDK user must define how much memory is available for iOS application. Should be set using the following code: #include <os/proc.h> options.mobileAvailableMemory = os_proc_available_memory();
+The model to be used for face detection (default is FAST).
 
-## `public FacialRecognitionModel frModel = FacialRecognitionModel.LITE`
+#### `public ObjectDetectionModel objModel = ObjectDetectionModel.ACCURATE`
 
-The model to be used for facial recognition (default is LITE model)
+The model to be used for object detection (default is ACCURATE).
 
-## `public ObjectDetectionModel objModel = ObjectDetectionModel.ACCURATE`
+#### `public int smallestFaceHeight = 40`
 
-The model to be used for object detection (default is ACCURATE model)
+Filter the detected faces based on face height. (default is 40 pixels).
 
-## `public int smallestFaceWidth = 40`
+#### `public FaceDetectionFilter fdFilter = FaceDetectionFilter.BALANCED`
 
-The smallest face height that the face detector can detect. (default is 20 pixels, min value is 16 pixels). The face detector has a detection scale range of about 5 octaves. Ex. 40 pixels yields the detection scale range of ~40 pixels to 1280 (=40x2^5) pixels. If set to -1, will dynamically adjusts the face detection scale range from image-height/32 to image-height to ensure that large faces are detected in high resolution images.
+The face detection filter (default is BALANCED).
 
-## `public FaceDetectionFilter fdFilter = FaceDetectionFilter.BALANCED`
+#### `public DatabaseManagementSystem dbms = DatabaseManagementSystem.SQLITE`
 
-The face detection precision-recall mode (default is BALANCED)
+Database management system for storing Faceprints (default is SQLITE).
 
-## `public DatabaseManagementSystem dbms = DatabaseManagementSystem.SQLITE`
+#### `public String modelsPath = "./"`
 
-Database management system for storing templates (default is SQLITE)
+Path specifying the directory which contains the model files.
 
-## `public String modelsPath = ".`
+#### `public boolean frVectorCompression = false`
 
-The directory path containing the model files
+Improves 1 to 1 Faceprint comparison times and 1 to N search speeds by compressing the feature vector and enabling additional optimizations. Also reduces the memory required to store each Faceprint. (default is false).
 
-## `public boolean frVectorCompression = false`
+#### `public GPUOptions gpuOptions = new GPUOptions()`
 
-Improves the computation speed for 1 to 1 comparisons and 1 to N searches by compressing the feature vector and enabling additional optimizations.
+Options for enabling and configuring GPU inference. Default uses CPU inference. Note, GPU support requires a different version of the SDK.
 
-## `public boolean enableGPU = false`
+#### `public InitializeModule initializeModule = new InitializeModule()`
 
-Enable GPU support (default is false). Note, GPU support requires a different version of the SDK.
+Initialize specified modules in the SDK constructor (default uses lazy initialization).
 
-## `public int deviceIndex = 0`
+#### `public EncryptDatabase encryptDatabase = new EncryptDatabase()`
 
-GPU device index
+Encrypt the biometric templates and identity strings when storing in the database using AES encryption (default is disabled).
+
+#### `public boolean useGlobalInferenceThreadpool = true`
+
+Enable the use of a global inference threadpool. Should be enabled on machines with less than 32 threads or when running a sequential inference pipeline.
+
+### Constructors
+
+#### `public ConfigurationOptions()`
+
+Default constructor.
+
+#### `public ConfigurationOptions(boolean useCoreML, boolean useNNAPI, FacialRecognitionModel frModel, FaceDetectionModel fdModel, ObjectDetectionModel objModel, int smallestFaceHeight, FaceDetectionFilter fdFilter, DatabaseManagementSystem dbms, String modelsPath, boolean frVectorCompression, GPUOptions gpuOptions, InitializeModule initializeModule, EncryptDatabase encryptDatabase, boolean useGlobalInferenceThreadpool)`
+
+Constructor to initialize the `ConfigurationOptions` with specific values.
+
+- **Parameters:**
+  - `useCoreML` - Provider option CoreML / Apple devices.
+  - `useNNAPI` - Provider option NNAPI / Android.
+  - `frModel` - The model to be used for facial recognition.
+  - `fdModel` - The model to be used for face detection.
+  - `objModel` - The model to be used for object detection.
+  - `smallestFaceHeight` - The smallest face height to detect.
+  - `fdFilter` - The face detection filter.
+  - `dbms` - Database management system for storing Faceprints.
+  - `modelsPath` - Path specifying the directory which contains the model files.
+  - `frVectorCompression` - Enables feature vector compression.
+  - `gpuOptions` - Options for enabling and configuring GPU inference.
+  - `initializeModule` - Initialize specified modules in the SDK constructor.
+  - `encryptDatabase` - Enables AES encryption for database storage.
+  - `useGlobalInferenceThreadpool` - Enables the use of a global inference threadpool.

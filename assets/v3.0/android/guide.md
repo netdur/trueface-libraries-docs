@@ -29,8 +29,8 @@ If you want to change any default settings of the Trueface SDK, specify those se
 1. `smallestFaceWidth`
 The smallest face height that the face detector can detect (default is 20 pixels, minimum value is 16 pixels). The face detector has a detection scale range of about 5 octaves. For example, 40 pixels yields the detection scale range of ~40 pixels to 1280 (=40x2^5) pixels. If set to -1, the face detection scale range will dynamically adjust from image-height/32 to image-height to ensure that large faces are detected in high-resolution images.
 
-2. `enableGPU`
-Enable GPU support (default is false). GPU support is only available for face detection and the lite frModel `frModel`.
+2. `useNNAPI`
+Enable NN support (default is false). you may notice accelration based on model and phone vendor.
 
 3. `frModel` Facial recognition models.
 To compare model performances, refer to our [ROC curves]("http://performance.trueface.ai/").

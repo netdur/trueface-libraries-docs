@@ -2,20 +2,38 @@
 
 ## `public class Faceprint`
 
-Face feature vector and meta data
+Face feature vector and meta data.
 
-## `public float[] featureVector`
+### Fields
 
-Vector of floats which describe the face
+#### `public List<Float> featureVector`
 
-## `public String sdkVersion`
+Vector of floats which describe the face.
 
-SDK version used to generate feature vector
+#### `public String sdkVersion`
 
-## `public String modelName`
+SDK version used to generate the feature vector.
 
-Name of model used to generate feature vector
+#### `public String modelName`
 
-## `public ModelOptions modelOptions`
+Name of the model used to generate the feature vector.
 
-Additional options used when generating the feature vector
+#### `public ModelOptions modelOptions`
+
+Additional options used when generating the feature vector.
+
+### Constructors
+
+#### `public Faceprint()`
+
+Default constructor.
+
+#### `public Faceprint(List<Float> featureVector, String sdkVersion, String modelName, ModelOptions modelOptions)`
+
+Constructor to initialize the `Faceprint` with specific values.
+
+- **Parameters:**
+  - `featureVector` - Vector of floats which describe the face.
+  - `sdkVersion` - SDK version used to generate the feature vector.
+  - `modelName` - Name of the model used to generate the feature vector.
+  - `modelOptions` - Additional options used when generating the feature vector.

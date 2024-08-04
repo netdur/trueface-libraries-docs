@@ -1,17 +1,39 @@
 # FaceBoxAndLandmarks
 
-## `public Point topLeft`
+## `public class FaceBoxAndLandmarks`
 
-The top left corner of the bounding box
+This class represents the face bounding box and facial landmarks.
 
-## `public Point bottomRight`
+### Fields
 
-The bottom right corner of the bounding box
+#### `public Point topLeft`
 
-## `public Point[] landmarks`
+The top left corner of the bounding box.
 
-The facial landmark points: left eye, right eye, nose, left mouth corner, right mouth corner
+#### `public Point bottomRight`
 
-## `public float score`
+The bottom right corner of the bounding box.
 
-Likelihood of this being a true positive; a value lower than 0.85 indicates a high chance of being a false positive
+#### `public List<Point> landmarks`
+
+A list of points representing the facial landmarks: subject's right eye, subject's left eye, nose, subject's right mouth corner, subject's left mouth corner.
+
+#### `public float score`
+
+Likelihood of this being a true positive.
+
+### Constructors
+
+#### `public FaceBoxAndLandmarks()`
+
+Default constructor.
+
+#### `public FaceBoxAndLandmarks(Point topLeft, Point bottomRight, List<Point> landmarks, float score)`
+
+Constructor to initialize the `FaceBoxAndLandmarks` with specific values.
+
+- **Parameters:**
+  - `topLeft` - The top left corner of the bounding box.
+  - `bottomRight` - The bottom right corner of the bounding box.
+  - `landmarks` - A list of points representing the facial landmarks.
+  - `score` - Likelihood of this being a true positive.

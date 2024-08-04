@@ -2,16 +2,26 @@
 
 ## `public class Spoof`
 
-Results from spoof detection
+Results from spoof detection.
 
-## `public boolean isReal = false`
+### Fields
 
-The face image is real
+#### `public ErrorCode errorCode`
 
-## `public boolean isFake = false`
+The error code indicating the result of the spoof detection operation.
 
-The image may be an attempted spoof
+#### `public boolean isReal = false`
 
-## `public float score`
+The face image is real.
 
-the probability that the image is a spoof attempt (1 indicates real image, 0 indicates spoof attempt).
+#### `public boolean isFake = false`
+
+The image may be an attempted spoof.
+
+#### `public float score`
+
+The probability that the image is a spoof attempt (1 indicates a real image, 0 indicates a spoof attempt).
+
+#### `public SpoofLabel label`
+
+The label indicating the result of the spoof detection (e.g., REAL, FAKE).

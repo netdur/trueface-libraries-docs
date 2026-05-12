@@ -1,29 +1,8 @@
 # CollectionNamesResult
 
-## `public class CollectionNamesResult`
+Result of retrieving the list of collection names.
 
-This class represents the result of a collection names retrieval operation, containing an error code and a list of collection names.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the operation.
-
-#### `public List<String> collectionNames`
-
-A list of collection names.
-
-### Constructors
-
-#### `public CollectionNamesResult()`
-
-Default constructor.
-
-#### `public CollectionNamesResult(ErrorCode errorCode, List<String> collectionNames)`
-
-Constructor to initialize the `CollectionNamesResult` with a specific error code and list of collection names.
-
-- **Parameters:**
-  - `errorCode` - The error code indicating the result of the operation.
-  - `collectionNames` - A list of collection names.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `List<String> collectionNames` - The list of collection names.

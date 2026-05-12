@@ -1,66 +1,126 @@
-# Trueface SDK Guide: Versioning, Setup, and Distribution
+# Android Setup
 
-This guide will walk you through versioning, setting up, and distributing your application with the Trueface SDK for Android and C++.
+This page covers versioning, installation, and packaging for the Trueface SDK on Android.
 
 ## Versioning
-The Android SDK generally precedes the C++ SDK by three major releases. For example, the Android SDK 2.n series was based on C++ SDK 0.n releases, and the Android SDK 5.n series is based on C++ SDK 3.n releases.
 
-The versioning schema follows the pattern: major + 3.minor + build. To retrieve the version of the C++ SDK used in your project, you can call the getSDKVersion method.
+The Android SDK wraps the underlying C++ SDK. The version scheme is `major.minor.patch+build`, where `major.minor` mirrors the underlying C++ SDK release line and `+build` is the Android wrapper revision.
 
-## Setup
-To set up the Trueface SDK in your Android project, follow these steps:
+The current release is **5.3.0+5**, built on top of the C++ SDK 3.1.x line.
 
-1. Download the **beta** [Trueface SDK 5.3.0+2](https://github.com/netdur/trueface-libraries-docs/releases/tag/v5.3.0%2B2) AAR file.
+To retrieve the runtime versions from your app:
 
-2. Import the AAR file using Android Studio:
-
-```clike
-File -> New -> New Module -> Import .jar/.aar and import your .aar.
+```java
+SDK sdk = new SDK(getApplicationContext(), new ConfigurationOptions());
+String androidWrapperVersion = sdk.getAndroidSDKVersion(); // e.g. "5.3.0+5"
+String coreCppVersion = sdk.getVersion();                  // C++ SDK version
 ```
 
-3. Add the following lines to your project's build.gradle file (located under the 'app' directory):
+## Requirements
 
-```clike
+| Requirement | Value |
+|---|---|
+| Min Android version | 7.0 (API 24) |
+| Compile SDK | 36 |
+| Target SDK | 36 |
+| Java / Kotlin target | 17 |
+| NDK | 29.0.14033849 |
+| Supported ABIs | `armeabi-v7a`, `arm64-v8a`, `x86_64` |
+
+## 16 KB page size compatibility
+
+Android 15 (API 35) introduced support for devices with 16 KB memory page sizes, and Google Play requires new apps and updates targeting Android 15+ to support them. The Trueface AAR is built with NDK 29, which produces 16 KB-aligned shared libraries, so the SDK runs on 16 KB-page devices out of the box.
+
+To verify your final app is aligned (not just the SDK), use the NDK helper:
+
+```bash
+$ANDROID_HOME/ndk/29.0.14033849/build/checkpoint-elf-alignment.sh \
+    app/build/outputs/apk/release/app-release.apk
+```
+
+## Install
+
+1. Download the latest AAR: [trueface-sdk-5.3.0+5.aar](https://github.com/netdur/trueface-libraries-docs/releases/tag/v5.3.0%2B5).
+
+2. Drop the file into your app's `libs/` directory:
+
+```
+your-app/
+  app/
+    libs/
+      trueface-sdk-5.3.0+5.aar
+```
+
+3. Reference it from `app/build.gradle`:
+
+```groovy
 dependencies {
-  implementation project(path: ':trueface-sdk-$VERSION')
+    implementation files('libs/trueface-sdk-5.3.0+5.aar')
 }
 ```
-Replace $VERSION with the appropriate version number.
 
-For Android Studio 4.2.1 and later:
+If you use Kotlin DSL (`build.gradle.kts`):
 
-Create a libs folder in the root directory of your project.
-
-1. Add the following lines to your project's build.gradle file (located under the 'app' directory):
-
-```clike
+```kotlin
 dependencies {
-  implementation files('../libs/trueface-sdk-$VERSION.aar')
+    implementation(files("libs/trueface-sdk-5.3.0+5.aar"))
 }
 ```
-Replace $VERSION with the appropriate version number.
 
-## Distribution
-The Trueface SDK supports both 32-bit (armeabi-v7a) and 64-bit (arm64-v8a, x86_64) architectures. If you distribute your mobile app through the Google Play Store, your users will only download the appropriate architecture for their device.
+## OpenCV: breaking change in 5.3.0+5
 
-You can also choose to exclude one or more architectures using Gradle. The following example retains only the arm64-v8a architecture:
+Starting with **5.3.0+5**, the AAR no longer bundles the `org.opencv.*` Java classes. The SDK still ships and uses its own native `libopencv_java4.so` internally for `armeabi-v7a`, `arm64-v8a`, and `x86_64` — only the Java/Kotlin API surface was removed.
 
-```clike
+**If your app uses `org.opencv.*` directly**, add OpenCV as a dependency yourself:
+
+```groovy
+dependencies {
+    implementation 'org.opencv:opencv:<version>'
+}
+```
+
+**If your app already bundles its own OpenCV native runtime**, you may see a `libopencv_java4.so` duplicate at packaging time. Resolve it in `app/build.gradle`:
+
+```groovy
 android {
-  ndk {
-    abiFilters 'arm64-v8a'
-  }
+    packagingOptions {
+        jniLibs {
+            pickFirsts += [
+                'lib/armeabi-v7a/libopencv_java4.so',
+                'lib/arm64-v8a/libopencv_java4.so',
+                'lib/x86_64/libopencv_java4.so',
+            ]
+        }
+    }
 }
 ```
-If your application depends on the OpenCV library, you can instruct Gradle to bundle only a single version of the library for each architecture:
 
-```clike
+Apps that don't touch OpenCV directly need no changes.
+
+## Distribution: ABI splits
+
+The AAR ships native binaries for `armeabi-v7a`, `arm64-v8a`, and `x86_64`. When you publish through Google Play, Play delivers the correct ABI to each device automatically.
+
+If you ship outside the Play Store (sideload, MDM, alternate stores) and want to shrink your APK, restrict to a single ABI:
+
+```groovy
 android {
-  packagingOptions {
-    pickFirst 'lib/x86_64/libopencv_java4.so'
-    pickFirst 'lib/armeabi-v7a/libopencv_java4.so'
-    pickFirst 'lib/arm64-v8a/libopencv_java4.so'
-  }
+    defaultConfig {
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
 }
 ```
-By following this guide, you should now have a better understanding of how to version, set up, and distribute your application with the Trueface SDK for Android and C++.
+
+## Bundled native libraries
+
+The AAR includes the following `.so` files for every supported ABI:
+
+| Library | Purpose |
+|---|---|
+| `libtrueface_sdk.so` | Core SDK |
+| `libonnxruntime.so` | Inference runtime |
+| `libopencv_java4.so` | OpenCV (native, used internally) |
+| `libssl.so`, `libcrypto.so` | OpenSSL |
+| `libarchive.so` | Archive utilities |

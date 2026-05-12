@@ -1,127 +1,135 @@
-## Install
+# iOS Guide
 
-To install the Trueface SDK, please follow these steps:
+The Trueface iOS SDK is distributed as an XCFramework supporting device and simulator on both Apple Silicon and Intel. The Objective-C binding bridges into Swift cleanly — both languages are first-class.
 
-1. Download and extract [Trueface SDK 3.0](https://github.com/netdur/trueface-libraries-docs/releases/tag/v3.0).
-2. Drag the folder `trueface.xcframework` into Xcode.
+## Requirements
 
-   ![Drag Framework](assets/assets/v1.6/ios/images/drag_framework.png)
+| | |
+|---|---|
+| Minimum iOS | 12.0 |
+| Minimum device | iPhone 6s |
+| Distribution | XCFramework (`trueface.xcframework`) |
+| Current version | **3.1.1** |
+| CoreML | Optional, off by default |
 
-3. Make sure to check `Copy items if needed` and your targets.
+## Install — CocoaPods
 
-   ![Adding Options](assets/assets/v1.6/ios/images/adding_options.png)
+Add to your `Podfile`:
 
-### Objective-C and Swift
+```ruby
+pod 'trueface', '3.1.1', :source => 'https://github.com/netdur/trueface-libraries-docs/releases/download/v3.1.1-ios/trueface.pods.zip'
+```
 
-Full binding for Objective-C and Swift are available by importing the `trueface/tf_sdk_binding.h` header. To use the Trueface SDK with Swift, create a bridge header:
+Then `pod install`.
 
-1. Create a new Objective C file in your project (File > New > File [Objective C for iOS]).
-2. Accept the prompt (agree) to create a bridging header file between Objective C and Swift.
-3. Delete your newly created Objective C file but retain the bridging header file `${YOURPROJ}-Bridging-Header.h`.
+Add these system frameworks and libraries to **General → Frameworks, Libraries, and Embedded Content**:
 
-In the Bridging header file, import the Trueface framework using the standard Objective C import syntax:
+- `AVFoundation.framework`
+- `CoreMedia.framework`
+- `libc++.1.tbd`
 
-```objective-c
+## Install — manual XCFramework
+
+1. Download `trueface.xcframework` from the [v3.1.1-ios release](https://github.com/netdur/trueface-libraries-docs/releases/tag/v3.1.1-ios).
+
+2. Drag `trueface.xcframework` into your Xcode project navigator.
+
+   ![Drag the framework into Xcode](images/drag_framework.png)
+
+3. Check **Copy items if needed** and tick your app target.
+
+   ![Copy and target options](images/adding_options.png)
+
+4. Under **General → Frameworks, Libraries, and Embedded Content**, set the framework to **Embed & Sign**.
+
+5. Add `AVFoundation.framework`, `CoreMedia.framework`, and `libc++.1.tbd` in the same panel.
+
+## Using the SDK in Objective-C
+
+Import the binding header where you need it:
+
+```objc
+#import <trueface/tf_sdk_binding.h>
+
+TFConfigurationOptions *options = [[TFConfigurationOptions alloc] init];
+TFSDK *sdk = [[TFSDK alloc] initWithConfigurationOptions:options];
+
+BOOL ok = [sdk setLicense:@"YOUR_LICENSE_TOKEN"];
+if (ok) {
+    NSLog(@"licensed, days remaining: %d", [sdk getExpireTime]);
+}
+```
+
+## Using the SDK in Swift
+
+Create a bridging header so Swift sees the Objective-C binding:
+
+1. **File → New → File → Objective-C File** in your project.
+2. Accept the prompt to create the bridging header. The new `.m` file can be deleted; keep the generated `<YourProj>-Bridging-Header.h`.
+3. In the bridging header, import the binding:
+
+```objc
 #import <trueface/tf_sdk_binding.h>
 ```
 
-Add the required frameworks and libraries:
+Then from Swift:
 
-Go to General > Frameworks, Libraries, and …
-Add AVFoundation.framework
-Add CoreMedia.framework
-Add libc++.1.tdb, libc++.tdb, and libc++abi.tdb
-Here's an example of Swift code:
-
-```Swift
+```swift
 import SwiftUI
 
-var options = TFConfigurationOptions()
-var sdk = TFSDK(configurationOptions: options)
-var ver = sdk?.getVersion()
+let options = TFConfigurationOptions()
+let sdk = TFSDK(configurationOptions: options)
 
-struct ContentView: View {
-    var body: some View {
-        Text(ver!)
-            .padding()
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+let licensed = sdk?.setLicense("YOUR_LICENSE_TOKEN") ?? false
+if licensed, let days = sdk?.getExpireTime() {
+    print("days remaining:", days)
 }
 ```
 
-### Cocoapods
+The Objective-C method `detectSpoofInImage:withFaceBoxAndLandmarks:threshold:` becomes `detectSpoof(in:with:threshold:)` in Swift — see [Objective-C / Swift](/v3.0/ios/objc) for the full bridge naming rules.
 
-Install the Trueface SDK using CocoaPods:
+## Models
 
-```cpp
-pod 'trueface', '3.0'
+Place your `.enc` model files in your app bundle, then point `modelsPath` at the bundle resources directory:
+
+```objc
+TFConfigurationOptions *options = [[TFConfigurationOptions alloc] init];
+NSString *resources = [[NSBundle mainBundle] resourcePath];
+options.modelsPath = resources;
+
+TFSDK *sdk = [[TFSDK alloc] initWithConfigurationOptions:options];
 ```
 
-Add the required frameworks and libraries:
-
-1. Go to General > Frameworks, Libraries, and …
-2. Add AVFoundation.framework
-3. Add CoreMedia.framework
-4. Add libc++.1.tdb, libc++.tdb, and libc++abi.tdb
-
-## Usage
-
-The Trueface SDK for iOS has a C++ API, which can easily be used in your project by adding an m to your Objective-C file. For example, rename ViewController.m to ViewController.mm and import headers:
-
-```cpp
-#import "ViewController.h"
-
-#include <trueface/tf_data_types.h>
-#include <trueface/tf_sdk.h>
-
-@interface ViewController ()
-
-@end
-
-@implementation ViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    Trueface::ConfigurationOptions options;
-    
-    Trueface::SDK *sdk = new Trueface::SDK(options);
-    printf("hello trueface %s\n", sdk->getVersion().c_str());
-    
-}
-
-@end
+```swift
+let options = TFConfigurationOptions()
+options?.modelsPath = Bundle.main.resourcePath
+let sdk = TFSDK(configurationOptions: options)
 ```
 
-## Tips
+## Database location
 
-* Create a group folder to hold assets like models, and instruct the SDK to find them as shown below:
+`createDatabaseConnection:` accepts an absolute filesystem path. Use the app's Library directory for an SDK-managed database:
 
-```cpp
-Trueface::ConfigurationOptions options;
-NSString *assets = [[NSBundle mainBundle] resourcePath];
-options.modelsPath = std::string([assets UTF8String]);
-```
-
-* To save the database in a writable path, use the following code example:
-
-```cpp
+```objc
 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-NSString *libraryDirectory = [paths objectAtIndex:0];
-std::string db = std::string([libraryDirectory UTF8String]) + std::string("/test.db");
+NSString *libDir = paths.firstObject;
+NSString *dbPath = [libDir stringByAppendingPathComponent:@"faces.db"];
+[sdk createDatabaseConnection:dbPath];
 ```
 
-* Enable CoreML computing
+## CoreML
 
-```cpp
-Trueface::ConfigurationOptions options;
-options.useCoreML = true;
+CoreML is supported but off by default. Enable it before constructing the SDK:
+
+```objc
+TFConfigurationOptions *options = [[TFConfigurationOptions alloc] init];
+options.useCoreML = YES;
 ```
 
-* In cases where ARC does not call dealloc fast enough, use destroy to free up memory.
+## Cleanup
+
+`TFSDK` and `TFImage` hold native memory. ARC handles release automatically in most cases — if you need deterministic teardown, call `dealloc` paths via `uninitializeModule:` or release strong references explicitly.
+
+## Sample
+
+The iOS bindings repository includes a 3D spoof detection sample at `3d_spoof/` that wires up `AVDepthData`, the video capture pipeline, and frame validation. It's the recommended starting point.

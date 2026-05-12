@@ -1,402 +1,235 @@
-The content of the `SDK.java` file appears to include several additional methods and details. Here is the revised complete documentation, ensuring all public methods are included:
+# SDK
 
-# Documentation
+The `SDK` class is the main entry point. It owns native resources, so always close it (`AutoCloseable`) or call `destroy()` when you're done.
 
-## `public SDK(Context context)`
+```java
+try (SDK sdk = new SDK(context, options)) {
+    sdk.setLicense(token);
+    // work
+}
+```
 
-Initialize the SDK using default configuration options.
+---
 
-* **Parameters:** `context` — Application context.
-* **See also:** ConfigurationOptions
+## Lifecycle
 
-## `public SDK(Context context, ConfigurationOptions options)`
+### `public SDK(Context context)`
+Construct with default configuration.
 
-Initialize the SDK using custom configuration options.
+### `public SDK(Context context, ConfigurationOptions options)`
+Construct with custom configuration. Models in app assets are copied into private storage and the path is set on `options.modelsPath` automatically.
 
-* **Parameters:**
-   * `context` — Application context.
-   * `options` — Custom configuration options.
-* **See also:** ConfigurationOptions
+### `public SDK(Context context, long pointer)`
+Construct from an already-initialized native pointer.
 
-## `public SDK(Context context, long pointer)`
+### `public void setAutoDestroyOnGC(boolean autoDestroyOnGC)`
+Toggle whether the SDK is destroyed on GC. Default is true.
 
-Initialize the SDK using an already initialized pointer.
+### `public long getPointer()`
+Get the native pointer.
 
-* **Parameters:**
-   * `context` — Application context.
-   * `pointer` — SDK pointer.
+### `public native void destroy()`
+Release native resources.
 
-## `public void setAutoDestroyOnGC(boolean autoDestroyOnGC)`
+### `public void close()`
+Same as `destroy()`. Implements `AutoCloseable`.
 
-Disable destroying SDK on garbage collector event.
+---
 
-* **Parameters:** `autoDestroyOnGC` — Boolean flag.
+## License and version
 
-## `public long getPointer()`
+### `public boolean setLicense(String token)`
+Apply a license token. Must be called before any inference. Returns whether the token is valid.
 
-Get SDK pointer.
+### `public boolean isLicensed()`
+Whether the current token is valid.
 
-* **Returns:** Pointer.
+### `public int getExpireTime()`
+Remaining days the current token is valid for.
 
-## `public native void destroy()`
+### `public String getVersion()`
+Returns the underlying C++ SDK version.
 
-Manually destroy SDK.
+### `public String getAndroidSDKVersion()`
+Returns the Android wrapper version, e.g. `"5.3.0+5"`.
 
-## `public boolean setLicense(String token)`
+---
 
-Validate the given license token. This method must be called before using the SDK.
+## Image preprocessing
 
-* **Parameters:** `token` — The license token.
-* **Returns:** Whether the given license token is valid.
-* **See also:**
-   * this.isLicensed
-   * this.getExpireTime
+All `preprocessImage` overloads return an [`Image`](/v3.0/android/Image). Always close or destroy the `Image` when finished.
 
-## `public boolean isLicensed()`
+### `public Image preprocessImage(String path)`
+Load from a JPEG, JPG, PNG, BMP, or TIFF file. The path must not contain `~`.
 
-Check whether the given license token is valid and you can use the SDK.
+### `public Image preprocessImage(android.media.Image image)`
+Wrap a camera frame. Internally converts YUV_420_888 to NV12.
 
-* **Returns:** Whether the given license token is valid.
-* **See also:**
-   * this.setLicense
-   * this.getExpireTime
+### `public Image preprocessImage(Bitmap bitmap)`
+Wrap a Bitmap assuming RGBA color order.
 
-## `public int getExpireTime()`
+### `public Image preprocessImage(Bitmap bitmap, ColorCode color)`
+Wrap a Bitmap with an explicit color space. YUV codes are not supported for Bitmap input.
 
-* **Returns:** The number of remaining days that the token is valid for.
-* **See also:**
-   * this.setLicense
-   * this.isLicensed
+### `public Image preprocessImage(int width, int height, byte[] data, ColorCode colorCode)`
+Wrap raw bytes in any supported [`ColorCode`](/v3.0/android/ColorCode).
 
-## `public String getSDKVersion()`
+### `public Image preprocessImage(int width, int height, byte[] data)`
+Wrap raw bytes assuming `yuv_i420`.
 
-Get the version number of the C++ SDK.
+### `public static byte[] convertToI420(android.media.Image image)`
+Helper: convert a `YUV_420_888` camera frame to I420 bytes.
 
-* **Returns:** Version number as a string.
+### `public static byte[] convertToNV12(android.media.Image image)`
+Helper: convert a `YUV_420_888` camera frame to NV12 bytes.
 
-## `public String getVersion()`
+---
 
-Get the version-build number of the Android SDK.
+## Face detection and landmarks
 
-* **Returns:** Version number as a string.
+### `public FaceBoxAndLandmarks detectLargestFace(Image image)`
+Detect the single largest face. Returns null if none found.
 
-## `public Image preprocessImage(String path)`
+### `public FaceBoxAndLandmarks[] detectFaces(Image image)`
+Detect every face. Filter results with `score < 0.90` to reduce false positives toward zero.
 
-Preprocess the image to be used by other methods.
+### `public Point[] getFaceLandmarks(Image image, FaceBoxAndLandmarks face)`
+Get the 106-point landmark set for a detected face.
 
-* **Parameters:** `path` — The path of a JPEG, JPG, PNG, BMP, or TIFF file.
-* **Returns:** The preprocessed image.
-* **See also:** Image
+### `public Facechip extractAlignedFace(Image image, FaceBoxAndLandmarks face)`
+Align and crop the face to a [`Facechip`](/v3.0/android/Facechip), the input format for feature extraction and quality APIs.
 
-## `public Image preprocessImage(android.media.Image image)`
+### `public RotateFlags getFaceImageRotation(Image image)`
+Detect the rotation needed to bring the largest face to upright. Useful for offline pipelines; skip in live video.
 
-Preprocess the image to be used by other methods.
+---
 
-* **Parameters:** `image` — (android.media.Image) Image ideally from live camera buffer.
-* **Returns:** The preprocessed image.
-* **See also:** Image
+## Feature extraction and matching
 
-## `public Image preprocessImage(Bitmap bitmap, ColorCode color)`
+### `public Faceprint getLargestFaceFeatureVector(Image image)`
+Detect the largest face and return its feature vector in one call.
 
-Preprocess the image to be used by other methods.
+### `public Faceprint getFaceFeatureVector(Image image, FaceBoxAndLandmarks face)`
+Extract a feature vector for an already-detected face.
 
-* **Parameters:**
-   * `bitmap` — Bitmap image.
-   * `color` — The image color model.
-* **Returns:** The preprocessed image.
-* **See also:** Image
+### `public SimilarityResult getSimilarity(Faceprint fp1, Faceprint fp2)`
+Compare two faceprints. Returns a similarity measure and a calibrated match probability.
 
-## `public Image preprocessImage(Bitmap bitmap)`
+### `public native String faceprintToJson(Faceprint faceprint)`
+Serialize a faceprint to JSON.
 
-Preprocess the image to be used by other methods.
+### `public native Faceprint jsonToFaceprint(String jsonStr)`
+Deserialize a faceprint from JSON.
 
-* **Parameters:** `bitmap` — Bitmap image.
-* **Returns:** The preprocessed image.
-* **See also:** Image
+---
 
-## `public Image preprocessImage(int width, int height, byte[] data, ColorCode colorCode)`
+## Quality
 
-Preprocess the image to be used by other methods.
+### `public FaceImageQualityResult estimateFaceImageQuality(Facechip chip)`
+Visual quality of the aligned face. Threshold ~0.999 is suggested for enrollment.
 
-* **Parameters:**
-   * `colorCode` — Color space.
-   * `data` — An 8-bit decoded image array, in the CPU memory or the GPU memory.
-   * `width` — The image width.
-   * `height` — The image height.
-* **Returns:** The preprocessed image.
-* **See also:** Image
+### `public FaceTemplateQualityResult estimateFaceTemplateQuality(Facechip chip)`
+Biometric utility of the face for recognition — independent of visual quality.
 
-## `public Image preprocessImage(int width, int height, byte[] data)`
+### `public FaceImageBlurDetectionResult detectFaceImageBlur(Facechip chip)`
+Blur classification with a score.
 
-Preprocess the image to be used by other methods.
+### `public FaceImageExposureResult checkFaceImageExposure(Image image, FaceBoxAndLandmarks face)`
+Over/under-exposure check with percentage breakdown.
 
-* **Parameters:**
-   * `data` — An 8-bit decoded image array, in the CPU memory or the GPU memory.
-   * `width` — The image width.
-   * `height` — The image height.
-* **Returns:** The preprocessed image.
-* **See also:** Image
+---
 
-## `public BoundingBox[] detectObjects(Image image)`
+## Attributes
 
-Detect people and objects in the image.
+### `public EstimateHeadOrientation estimateHeadOrientation(Image image, FaceBoxAndLandmarks face)`
+Yaw / pitch / roll, plus rotation and translation vectors.
 
-* **Parameters:** `image` — The input image returned by preprocessImage().
-* **Returns:** A vector of BoundingBox objects that gets populated with the detected objects.
-* **See also:** this.getObjectLabelString
+### `public BlinkState detectBlink(Image image, FaceBoxAndLandmarks face)`
+Per-eye blink state, score, and eye aspect ratio.
 
-## `public Point[] getFaceLandmarks(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
+### `public MaskDetectionResult detectMask(Image image, FaceBoxAndLandmarks face)`
+Mask classification.
 
-Obtain the 106 face landmarks.
+### `public GlassesDetectionResult detectGlasses(Image image, FaceBoxAndLandmarks face)`
+Eyeglass classification.
 
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
-* **Returns:** An array of 106 face landmark points.
+---
 
-## `public FaceBoxAndLandmarks detectLargestFace(Image image)`
+## Spoof detection
 
-Detect the largest face in the image.
+### `public ErrorCode checkSpoofImageFaceSize(Image image, FaceBoxAndLandmarks face, ActiveSpoofStage stage)`
+Validate face size before running active spoof. In the far stage, the face should be ~18 inches from the camera; in the near stage, 7–8 inches. Returns `NO_ERROR` if eligible, `FACE_TOO_CLOSE` / `FACE_TOO_FAR` otherwise.
 
-* **Parameters:** `image` — The input image returned by preprocessImage().
-* **Returns:** The bounding box and landmarks.
-* **See also:** this.detectFaces
+### `public Spoof detectActiveSpoof(Point[] nearLandmarks, Point[] farLandmarks)`
+Active spoof using paired near/far landmark sets. Default spoof score threshold is 1.05.
 
-## `public FaceBoxAndLandmarks[] detectFaces(Image image)`
+### `public Spoof detectSpoof(Image image, FaceBoxAndLandmarks face)`
+Passive spoof detection with the default threshold (0.75).
 
-Detect all the faces in the image. This method has a small false positive rate. To reduce the false positive rate to near zero, filter out faces with a score lower than 0.90.
+### `public Spoof detectSpoof(Image image, FaceBoxAndLandmarks face, float threshold)`
+Passive spoof with a custom threshold.
 
-* **Parameters:** `image` — The input image returned by preprocessImage().
-* **Returns:** A vector of bounding box and landmarks.
+---
 
-## `public Facechip extractAlignedFace(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
+## Object detection
 
-Align the detected face to be optimized for passing to feature extraction. If using the face chip with Trueface algorithms, do not change the default margin and scale values.
+### `public BoundingBox[] detectObjects(Image image)`
+Run the 80-class object detector. Each result has `label` (an [`ObjectLabel`](/v3.0/android/ObjectLabel) enum), `probability`, `topLeft`, `width`, and `height`.
 
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — The FaceBoxAndLandmarks returned by detectLargestFace() or detectFaces().
-* **Returns:** Facechip.
-* **See also:** Facechip
+---
 
-## `public float estimateFaceImageQuality(Facechip facechip)`
+## Collections
 
-Estimate the quality of the face image for recognition.
+A collection is a named set of faceprints with associated identities. The backing database is configured via [`ConfigurationOptions.dbms`](/v3.0/android/ConfigurationOptions) ([`DatabaseManagementSystem`](/v3.0/android/DatabaseManagementSystem) — `SQLITE`, `POSTGRESQL`, or `NONE` for in-memory).
 
-* **Parameters:** `facechip` — The Facechip returned by extractAlignedFace().
-* **Returns:** Quality, a value between 0 to 1, 1 being perfect quality for recognition.
+### `public ErrorCode createDatabaseConnection(String connectionString)`
+Open or create the backing database. For SQLite, this is a relative filename — the SDK places it inside `<app-files>/collections/`.
 
-## `public Faceprint getLargestFaceFeatureVector(Image image)`
+### `public ErrorCode createCollection(String name)`
+Create a new collection. Must `loadCollection()` before enrolling.
 
-Detect the largest face in the image and return its feature vector.
+### `public ErrorCode createLoadCollection(String name)`
+Create-or-load: opens an existing collection or creates a new empty one.
 
-* **Parameters:** `image` — The input image returned by preprocessImage().
-* **Returns:** A Faceprint object which will contain the face feature vector.
+### `public ErrorCode loadCollection(String name)`
+Load an existing collection into memory.
 
-## `public Faceprint getFaceFeatureVector(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
+### `public ErrorCode loadCollectionPersist(String name)`
+Load persistently — keeps it resident across `loadCollection` calls on other collections.
 
-Extract the face feature vector from an aligned face image.
+### `public ErrorCode loadCollections(List<String> names)`
+Load multiple collections at once.
 
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — Face box returned by detectFaces() or detectLargestFace().
-* **Returns:** Faceprint to contain the face template.
+### `public ErrorCode deleteCollection(String name)`
+Drop a collection from the database.
 
-## `public Similarity getSimilarity(Faceprint faceprint1, Faceprint faceprint2)`
+### `public CollectionNamesResult getCollectionNames()`
+All collections in the connected database.
 
-Compute the similarity between two feature vectors, or how similar two faces are.
+### `public CollectionNamesResult getLoadedCollectionNames()`
+Collections currently in memory.
 
-* **Parameters:**
-   * `faceprint1` — Faceprint of the first template to be compared.
-   * `faceprint2` — Faceprint of the second template to be compared.
-* **Returns:** The computed similarity measure.
+### `public CollectionMetadataResult getCollectionMetadata(String name)`
+Identity count, faceprint count, model used, encryption flag.
 
-## `public EstimateHeadOrientation estimateHeadOrientation(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
+### `public CollectionIdentitiesResult getCollectionIdentities(String name)`
+Map of identity strings to their enrolled UUIDs.
 
-Estimate the head pose.
+---
 
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
-* **Returns:** EstimateHeadOrientation.
-* **See also:** EstimateHeadOrientation
+## Enrollment and identification
 
-## `public BlinkState detectBlink(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
+### `public EnrollmentResult enrollFaceprint(Faceprint fp, String identity, String collectionName)`
+Add a faceprint under an identity. `collectionName` can be empty if only one collection is loaded. Returns the assigned UUID and an error code.
 
-Estimate score for eye blink.
+### `public ErrorCode removeByUUID(String UUID, String collectionName)`
+Remove a single enrollment by its UUID.
 
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
-* **Returns:** BlinkState.
-* **See also:** BlinkState
+### `public RemoveIdentityResult removeByIdentity(String identity, String collectionName)`
+Remove every faceprint enrolled under an identity. Returns the count removed.
 
-## `public ErrorCode checkSpoofImageFaceSize(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks, ActiveSpoofStage activeSpoofStage)`
+### `public Candidate identifyTopCandidate(Faceprint fp, float threshold, String collectionName)`
+Best match above the threshold, or null.
 
-Ensure that the face size meets the requirements for active spoof. This function must be called before calling detectActiveSpoof().
-
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — The face on which to run active spoof detection.
-   * `activeSpoofStage` — The stage of the image, either near stage or far stage.
-* **Returns:** Error code.
-
-## `public Spoof detectActiveSpoof(Point[] nearFaceLandmarks, Point[] farFaceLandmarks)`
-
-Detect if there is a presentation attack attempt. Must call checkSpoofImageFaceSize() on both input faces before calling this function.
-
-* **Parameters:**
-   * `nearFaceLandmarks` — The face landmarks of the near face, obtained by calling getFaceLandmarks().
-   * `farFaceLandmarks` — The face landmarks of the far face, obtained by calling getFaceLandmarks().
-* **Returns:** Spoof. If the spoof score is above the threshold, then it is classified as a real face. If the spoof score is below the threshold, then it
-
- is classified as a fake face.
-
-## `public Spoof detectSpoof(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks, float threshold)`
-
-Detect if there is a presentation attack attempt.
-
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
-   * `threshold` — The spoof score threshold above which it is considered a spoof attempt.
-* **Returns:** Spoof.
-* **See also:** Spoof
-
-## `public Spoof detectSpoof(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
-
-Detect if there is a presentation attack attempt.
-
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
-* **Returns:** Spoof.
-* **See also:** Spoof
-
-## `public ErrorCode createDatabaseConnection(String databaseConnectionString)`
-
-Create a connection to a new or existing database. If the database does not exist, a new one will be created with the provided name.
-
-* **Parameters:** `databaseConnectionString` — If SQLITE DatabaseManagementSystem is selected, this should be the filepath to the database.
-* **Returns:** Error code.
-
-## `public ErrorCode createLoadCollection(String collectionName)`
-
-Create a new collection, or load data from an existing collection into memory if one with the provided name already exists in the database.
-
-* **Parameters:** `collectionName` — The name of the collection.
-* **Returns:** Error code.
-
-## `public ErrorCode createCollection(String collectionName)`
-
-Create a new collection in the database. Before enrolling Faceprints into the newly created collection, you must call loadCollection(). If the collection with the provided name already exists, this is a harmless no-op.
-
-* **Parameters:** `collectionName` — The name of the collection.
-* **Returns:** Error code.
-
-## `public ErrorCode loadCollection(String collectionName)`
-
-Load the collection into memory. Must be called before enrolling Faceprints or calling identification functions.
-
-* **Parameters:** `collectionName` — The name of the collection to load into memory.
-* **Returns:** Error code.
-
-## `public ErrorCode deleteCollection(String collectionName)`
-
-Delete a collection from the current database.
-
-* **Parameters:** `collectionName` — The name of the collection to delete.
-* **Returns:** Error code.
-
-## `public String enrollFaceprint(Faceprint faceprint, String identity)`
-
-Enroll a template for a new or existing identity in the collection.
-
-* **Parameters:**
-   * `faceprint` — The template to enroll in the collection.
-   * `identity` — The identity corresponding to the template.
-* **Returns:** UUID universally unique identifier corresponding to the template.
-
-## `public String[] getCollectionNames()`
-
-Get a list of the names of all the collections in the database. Collection names can then be passed to getCollectionMetadata() and getCollectionIdentities().
-
-* **Returns:** List of collection names in the database.
-
-## `public CollectionMetadata getCollectionMetadata(String collectionName)`
-
-Get the metadata for the specified collection in the database, loaded or unloaded.
-
-* **Parameters:** `collectionName` — The name of the collection for which to retrieve the metadata.
-* **Returns:** Metadata for the specified collection.
-
-## `public HashMap<String, String> getCollectionIdentities(String collectionName)`
-
-Get a map of identities and UUIDs for the specified collection in the database, loaded or unloaded. This can be a slow operation (especially for unloaded collections), call sparingly.
-
-* **Parameters:** `collectionName` — The name of the collection for which to retrieve the identities.
-* **Returns:** Identities, a map of identities and corresponding UUIDs.
-
-## `public ErrorCode removeByUUID(String UUID)`
-
-Remove a template from the collection using the UUID.
-
-* **Parameters:** `UUID` — The universally unique identifier corresponding to the template to be removed from the collection.
-* **Returns:** Error code.
-
-## `public ErrorCode removeByIdentity(String identity)`
-
-Remove all templates in the collection corresponding to the identity.
-
-* **Parameters:** `identity` — The identity to remove from the collection.
-* **Returns:** Error code.
-
-## `public Candidate identifyTopCandidate(Faceprint faceprint, float threshold)`
-
-Get the top candidate identity in the collection and the corresponding similarity score and match probability.
-
-* **Parameters:**
-   * `faceprint` — The template to be identified.
-   * `threshold` — The similarity score threshold above which it is considered a match.
-* **Returns:** Candidate.
-
-## `public MaskResult detectMask(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
-
-Detect whether the face in the image is wearing a mask.
-
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
-* **Returns:** MaskResult.
-* **See also:** MaskResult
-
-## `public GlassesDetectionResult detectGlasses(Image image, FaceBoxAndLandmarks faceBoxAndLandmarks)`
-
-Detect whether the face in the image is wearing any type of eyeglasses.
-
-* **Parameters:**
-   * `image` — The input image returned by preprocessImage().
-   * `faceBoxAndLandmarks` — FaceBoxAndLandmarks returned by detectFaces() or detectLargestFace().
-* **Returns:** GlassesDetectionResult.
-* **See also:** GlassesDetectionResult
-
-## `public RotateFlags getFaceImageRotation(Image image)`
-
-Detect the orientation of a face image. Returns the rotation required to achieve neutral orientation. As this method does add overhead, we advise only adding it to your pipeline when doing offline processing (e.g., reading a database of ID images where some ID images may not be oriented correctly).
-
-* **Parameters:** `image` — The input image returned by preprocessImage().
-* **Returns:** The rotation required to achieve neutral orientation.
-
-## `public FaceImageBlurDetectionResult detectFaceImageBlur(Facechip facechip)`
-
-Determine if the face image is blurry or of good quality for face recognition.
-
-* **Parameters:** `facechip` — The Facechip returned by extractAlignedFace().
-* **Returns:** FaceImageBlurDetectionResult, which contains the quality and blur score.
-
-## `public Faceprint jsonToFaceprint(String jsonStr)`
-
-Convert a JSON string representation of a Faceprint to a Faceprint object.
-
-* **Parameters:** `jsonStr` — The JSON string representation of a Faceprint.
-* **Returns:** The Faceprint object populated from the JSON string.
+### `public List<Candidate> identifyTopCandidates(Faceprint fp, int numCandidates, float threshold, String collectionName)`
+Top-N matches above the threshold, ordered by descending similarity.

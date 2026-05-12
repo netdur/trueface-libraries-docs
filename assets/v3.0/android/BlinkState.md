@@ -1,29 +1,12 @@
-# Documentation
+# BlinkState
 
-## `public class BlinkState`
+Results from blink detection. You can use the members to set your own thresholds appropriate for your camera and lighting conditions.
 
-Results from blink detection. You can use the members of `Trueface::BlinkState` to set your own thresholds which work best for your camera and lighting conditions.
+## Fields
 
-## `public boolean isLeftEyeClosed = false`
-
-Computed as `Trueface::BlinkState.leftEyeScore` < 0.3 && `Trueface::BlinkState.leftEyeAspectRatio` < 0.22.
-
-## `public boolean isRightEyeClosed = false`
-
-Computed as `Trueface::BlinkState.rightEyeScore` < 0.3 && `Trueface::BlinkState.rightEyeAspectRatio` < 0.22.
-
-## `public float leftEyeScore = 0.f`
-
-0 indicates closed, 1 indicates open.
-
-## `public float rightEyeScore = 0.f`
-
-0 indicates closed, 1 indicates open.
-
-## `public float leftEyeAspectRatio = 0.f`
-
-The aspect ratio of the left eye, computed as height / width.
-
-## `public float rightEyeAspectRatio = 0.f`
-
-The aspect ratio of the right eye, computed as height / width.
+- `boolean isLeftEyeClosed` - Predicted result for the left eye being closed. Computed as `leftEyeScore < 0.5`.
+- `boolean isRightEyeClosed` - Predicted result for the right eye being closed. Computed as `rightEyeScore < 0.5`.
+- `float leftEyeScore` - Score indicating if the left eye is open or closed. 0 indicates closed, 1 indicates open.
+- `float rightEyeScore` - Score indicating if the right eye is open or closed. 0 indicates closed, 1 indicates open.
+- `float leftEyeAspectRatio` - The aspect ratio of the left eye, computed as height / width.
+- `float rightEyeAspectRatio` - The aspect ratio of the right eye, computed as height / width.

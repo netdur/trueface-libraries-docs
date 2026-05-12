@@ -1,29 +1,8 @@
 # MaskDetectionResult
 
-## `public class MaskDetectionResult`
+Result of a mask detection operation.
 
-This class represents the result of a mask detection operation, containing the detected label and a confidence score.
+## Fields
 
-### Fields
-
-#### `public MaskLabel label`
-
-The label indicating whether a mask was detected.
-
-#### `public float score`
-
-The confidence score of the detection.
-
-### Constructors
-
-#### `public MaskDetectionResult()`
-
-Default constructor.
-
-#### `public MaskDetectionResult(MaskLabel label, float score)`
-
-Constructor to initialize the `MaskDetectionResult` with specific values.
-
-- **Parameters:**
-  - `label` - The label indicating whether a mask was detected.
-  - `score` - The confidence score of the detection.
+- `MaskLabel label` - The detection result. See [MaskLabel](/v3.0/android/MaskLabel).
+- `float score` - The confidence score of the detection.

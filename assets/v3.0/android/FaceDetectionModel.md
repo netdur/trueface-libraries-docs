@@ -1,15 +1,8 @@
 # FaceDetectionModel
 
-## `public enum FaceDetectionModel`
+The face detection model.
 
-The face detection model. For most use cases, the face model is optimal.
+## Values
 
-### Enum Constants
-
-#### `FAST`
-
-Fast model.
-
-#### `ACCURATE`
-
-Accurate model.
+- `FAST` - Fast model.
+- `ACCURATE` - Accurate model.

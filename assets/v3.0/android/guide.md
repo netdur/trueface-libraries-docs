@@ -1,232 +1,238 @@
-# Trueface SDK Android Guide: Input Image, License, Configuration, and Processing
-This guide will help you understand how to work with input images, license keys, configuration options, and various processing techniques in the Trueface SDK for Android.
+# Android Guide
+
+This guide covers the full Trueface SDK Android workflow: configuration, licensing, image preparation, detection, recognition, and identification.
 
 ## Input image
 
-For face recognition, it is recommended to use an image with dimensions of at least 480x360 pixels. To accurately detect faces, input images must contain faces with sufficient pixel data. Generally, each face should be at least 100x100 pixels for detection, and at least 200x200 pixels for detecting facial contours.
+For reliable detection, use an image of at least **480 × 360** pixels. Each face should be at least **100 × 100** pixels for detection, and **200 × 200** pixels for landmark or feature extraction.
 
-In real-time applications, consider using smaller images to reduce latency. However, maintain the required accuracy by ensuring that the subject's face occupies as much of the image as possible. Unfocused images can impact accuracy, so you may need to ask the user to recapture the image if the results are unsatisfactory.
+For real-time pipelines, lower resolutions reduce latency — keep enough pixels on the target face. Out-of-focus images hurt accuracy; ask the user to retry if quality is low.
 
-The orientation of a face relative to the camera can also affect the detection of facial features by the Trueface SDK.
+Make sure the image is in upright orientation before passing it to the SDK. The SDK does not auto-rotate from EXIF — you rotate explicitly via [`Image.rotate(RotateFlags)`](/v3.0/android/RotateFlags).
 
 ## License
 
-To obtain a license key, contact the Trueface sales team and provide your applicationId. Then, use the setToken method to license your SDK:
+You need a license token from Trueface. Apply it to a constructed `SDK` instance:
 
 ```java
-ConfigurationOptions configurationOptions = new ConfigurationOptions();
+ConfigurationOptions options = new ConfigurationOptions();
+SDK sdk = new SDK(getApplicationContext(), options);
 
-SDK sdk = new SDK(getApplicationContext(), configurationOptions);
-bool isLicensed = sdk.setLicense(token);
+boolean ok = sdk.setLicense(token);
+if (!ok) {
+    // license invalid or expired
+}
+
+if (sdk.isLicensed()) {
+    int daysRemaining = sdk.getExpireTime();
+}
 ```
-
-Use isLicensed to check the validity of the license and getExpireTime to obtain the remaining number of days for which the token is valid.
 
 ## Configuration
 
-If you want to change any default settings of the Trueface SDK, specify those settings with a ConfigurationOptions object before applying any analysis to an image. You can change the following settings:
-
-1. `smallestFaceWidth`
-The smallest face height that the face detector can detect (default is 20 pixels, minimum value is 16 pixels). The face detector has a detection scale range of about 5 octaves. For example, 40 pixels yields the detection scale range of ~40 pixels to 1280 (=40x2^5) pixels. If set to -1, the face detection scale range will dynamically adjust from image-height/32 to image-height to ensure that large faces are detected in high-resolution images.
-
-2. `useNNAPI`
-Enable NN support (default is false). you may notice accelration based on model and phone vendor.
-
-3. `frModel` Facial recognition models.
-To compare model performances, refer to our [ROC curves]("http://performance.trueface.ai/").
-You can also find more information on our [FAQ page]("https://reference.trueface.ai/cpp/dev/latest/py/faq.html#what-are-the-differences-between-the-face-recognition-models").
-The current most accurate model is TFV5.
-
-
-For example:
+`ConfigurationOptions` controls everything from model selection to module pre-initialization. Set it once at construction.
 
 ```java
-ConfigurationOptions configurationOptions = new ConfigurationOptions();
-configurationOptions.smallestFaceWidth = 120;
+ConfigurationOptions options = new ConfigurationOptions();
+options.smallestFaceHeight = 120;
+options.frModel = FacialRecognitionModel.TFV7;
+options.fdModel = FaceDetectionModel.FAST;
+options.useNNAPI = true;
+options.modelsPath = "/data/data/your.app/models";
 
-SDK sdk = new SDK(getApplicationContext(), configurationOptions);
+SDK sdk = new SDK(getApplicationContext(), options);
 ```
 
-For unit tests, you can obtain Context using `InstrumentationRegistry`
+Common settings:
+
+| Setting | Default | Notes |
+|---|---|---|
+| `smallestFaceHeight` | 20 | Min face height (px). `-1` adapts dynamically to image height. |
+| `frModel` | `LITE_V2` | Recognition model. `TFV7` is most accurate; `LITE_V3` is best small model. |
+| `fdModel` | `FAST` | Face detector. `ACCURATE` if you need higher recall on hard cases. |
+| `useNNAPI` | `false` | Enable Android NNAPI acceleration where available. |
+| `modelsPath` | (empty) | Where the SDK loads `.enc` model files from. |
+| `initializeModule` | (all lazy) | Pre-initialize specific modules to avoid first-call latency. |
+
+For unit tests, you can obtain a `Context` via `InstrumentationRegistry`:
 
 ```java
 Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 ```
 
-## Prepare the input image
+## Preprocess the input
 
-To detect faces in an image, set the image from either a YuvImage, Image, Bitmap, byte array, or a file on the device. You should use an image with dimensions of at least 480x360 pixels. If you are detecting faces in real-time, capturing frames at this minimum resolution can help reduce latency.
-
-```java
-YuvImage image = ...;
-Image image = sdk.proprocessImage(image);
-```
+Wrap any source — YUV camera frame, `Bitmap`, byte array, or file path — into an [`Image`](/v3.0/android/Image) before running detection:
 
 ```java
-Bitmap image = ...;
-Image image = sdk.proprocessImage(image);
-// or set color space
-Image image = sdk.proprocessImage(image, ColorCode.rgba);
-```
+// From a Bitmap
+Bitmap bitmap = ...;
+Image image = sdk.preprocessImage(bitmap);
 
-```java
+// From a Bitmap with explicit colour space
+Image image = sdk.preprocessImage(bitmap, ColorCode.rgba);
+
+// From raw bytes (e.g. camera callback)
 int width = ...;
 int height = ...;
 byte[] data = ...;
-ColorCode colorCode = ...;
-        Image image = sdk.proprocessImage(width, height, data, colorCode);
-```
-And finally
-```java
-String imagePath = ...;
-Image image = sdk.proprocessImage(imagePath);
+Image image = sdk.preprocessImage(width, height, data, ColorCode.yuv_i420);
+
+// From a file
+Image image = sdk.preprocessImage("/sdcard/photo.jpg");
 ```
 
-Make sure to rotate the photo correctly before calling proprocessImage. If you don't use a camera library that gives you the image's rotation degree, you can calculate it from the device's rotation degree and the orientation of the camera sensor in the device:
+Rotate to upright if the source orientation isn't already correct:
 
 ```java
 int userRotation = frame.getRotationToUser();
-Image image = sdk.preprocessImage(size.getWidth(), size.getHeight(), data, ColorCode.yuv_i420);
-if (userRotation == 270) {
-        image.rotate(RotateFlags.ROTATE_90_COUNTERCLOCKWISE);
-}
-if (userRotation == 180) {
-        image.rotate(RotateFlags.ROTATE_180);
-}
-if (userRotation == 90) {
-        image.rotate(RotateFlags.ROTATE_90_CLOCKWISE);
-}
+Image image = sdk.preprocessImage(width, height, data, ColorCode.yuv_i420);
+if (userRotation == 90)  image.rotate(RotateFlags.ROTATE_90_CLOCKWISE);
+if (userRotation == 180) image.rotate(RotateFlags.ROTATE_180);
+if (userRotation == 270) image.rotate(RotateFlags.ROTATE_90_COUNTERCLOCKWISE);
 ```
 
-# IMPORTANT
-Please destroy Image object after usage
+> **Important:** `Image` holds native memory. Call `image.destroy()` (or use try-with-resources — `Image` implements `AutoCloseable`) when done.
+
 ```java
-image.destroy();
-```
-
-
-## Process the image
-
-Once you have constructed the Trueface SDK, provided a license, and set the image, you can now process the image with one of the several SDK calls:
-
-1. Detect faces
-1. Face Recognition
-1. Detect Glasses
-1. Detect Mask
-1. Object Detection
-
-## Get information about detected faces
-
-If the face detection operation succeeds, a list of FaceBoxAndLandmarks objects are passed to the success operation. Each FaceBoxAndLandmarks object represents a face detected in the image. For each face, you can get its bounding coordinates in the input image. For example:
-
-
-```Java
-FaceBoxAndLandmarks[] faceBoxAndLandmarksArray = sdk.detectFaces(image);
-for (FaceBoxAndLandmarks faceBoxAndLandmarks : faceBoxAndLandmarksArray) {
-  // top left point
-  Log.d(TAG, String.valueOf(faceBoxAndLandmarks.topLeft.y));
-  Log.d(TAG, String.valueOf(faceBoxAndLandmarks.topLeft.x));
-
-  // bottom right point
-  Log.d(TAG, String.valueOf(faceBoxAndLandmarks.bottomRight.y));
-  Log.d(TAG, String.valueOf(faceBoxAndLandmarks.bottomRight.x));
-
-  // face landmarks, left eye, right eye, nose, left mouth corner, right mouth corner
-  for (Point point: faceBoxAndLandmarks.landmarks) {
-    Log.d(TAG, String.valueOf(point.y));
-    Log.d(TAG, String.valueOf(point.x));
-  }
-
-  // face score
-  Log.d(TAG, String.valueOf(faceBoxAndLandmarks.score));
+try (Image image = sdk.preprocessImage(bitmap)) {
+    // use image
 }
 ```
 
-If you are only interested in the largest face in the input image, you can use detectLargestFace. For example:
+## Detect faces
 
-```Java
-FaceBoxAndLandmarks faceBoxAndLandmarks = sdk.detectLargestFace(image);
-if (faceBoxAndLandmarks) {
-  // face found
-}
-```
+```java
+FaceBoxAndLandmarks[] faces = sdk.detectFaces(image);
+for (FaceBoxAndLandmarks face : faces) {
+    Log.d(TAG, "top-left:  " + face.topLeft.x + ", " + face.topLeft.y);
+    Log.d(TAG, "bot-right: " + face.bottomRight.x + ", " + face.bottomRight.y);
+    Log.d(TAG, "score:     " + face.score);
 
-## Object Detection
-
-If the object detection operation succeeds, a list of BoundingBox objects are passed to the success operation. Each BoundingBox object represents an object detected in the image. For each object, you can get its bounding coordinates in the input image. For example:
-
-```Java
-BoundingBox[] boundingBoxs = sdk.detectObjects(image);
-for (BoundingBox boundingBox: boundingBoxs) {
-  String label = sdk.getObjectLabelString(boundingBox.label);
-  Log.d(TAG, String.valueOf(boundingBox.label)); 
-}
-```
-
-## Face Matching
-Face Matching, also known as face similarity, helps to check the likelihood that two faces belong to the same person. The getSimilarity method returns a similarity measure and match probability scores about how likely it is that the two faces belong to one person.
-
-```Java
-Image image = sdk.preprocessImage(bitmap1);
-assertEquals("make sure the test image exists and is loaded", image.errorCode, ErrorCode.NO_ERROR);
-Faceprint faceprint1 = sdk.getLargestFaceFeatureVector(image);
-
-image = sdk.preprocessImage(bitmap2);
-assertEquals("make sure the test image exists and is loaded", image.errorCode, ErrorCode.NO_ERROR);
-Faceprint faceprint2 = sdk.getLargestFaceFeatureVector(image);
-
-Similarity similarity = sdk.getSimilarity(faceprint1, faceprint2);
-assertTrue("similarity score", similarity.similarityMeasure > 0.6);
-```
-
-## Face Recognition
-
-The 1 to N functions allow you to enroll face recognition templates (Faceprints) into a database of face templates called a collection, then allow you to efficiently search through these collections for an identity.
-
-Note: on Android, Postgres is not available as a backend.
-
-First, you need to create a database file, for example, the following database file fr.db will be created inside a folder named collections within your application's private folder, then load the collection named staff:
-
-```Java
-ErrorCode errorCode = sdk.createDatabaseConnection("fr.db");
-assertEquals("create database connection", errorCode, ErrorCode.NO_ERROR);
-
-errorCode = sdk.createLoadCollection("staff");
-assertEquals("create or load load collection", errorCode, ErrorCode.NO_ERROR);
-```
-
-Then you need to enroll labeled Faceprints, for example:
-
-
-```Java
-List<Pair<String, String>> list = new ArrayList<>();
-list.add(new Pair<>("armstrong_2.jpg", "armstrong"));
-list.add(new Pair<>("armstrong_3.jpg", "armstrong"));
-list.add(new Pair<>("mr_bean.jpg", "bean"));
-list.add(new Pair<>("mr_bean_2.jpg", "bean"));
-list.add(new Pair<>("obama.jpg", "obama"));
-
-for (Pair<String, String> pair: list) {
-  Bitmap bitmap = getBitmapFromAsset(appContext, pair.first);
-  Image image = sdk.preprocessImage(bitmap1);
-  Faceprint faceprint = sdk.getLargestFaceFeatureVector(image);
-  if (faceprint != null) {
-    String uuid = sdk.enrollFaceprint(faceprint, pair.second);
-    if (uuid == null) {
-      // handle error
+    // 5-point landmarks: left eye, right eye, nose, left mouth corner, right mouth corner
+    for (Point p : face.landmarks) {
+        Log.d(TAG, p.x + ", " + p.y);
     }
-  }
 }
 ```
 
-Afterward, you can query the database using Faceprints, for example:
+For single-face flows (authentication, kiosk), use `detectLargestFace`:
 
-```Java
-Candidate candidate = sdk.identifyTopCandidate(probeFaceprint);
-assertEquals("identify top candidate", "armstrong", candidate.identity);
-
-Candidate[] candidates = sdk.identifyTopCandidates(probeFaceprint, 10);
-assertEquals("identify top candidates", "armstrong", candidates[0].identity);
+```java
+FaceBoxAndLandmarks face = sdk.detectLargestFace(image);
+if (face != null) {
+    // found
+}
 ```
 
-By following the steps and examples provided in this guide, you can successfully implement face detection, recognition, and object detection in your Android application using the Trueface SDK.
+## 1:1 face comparison
+
+`getSimilarity` returns both a raw similarity measure and a calibrated match probability:
+
+```java
+Image img1 = sdk.preprocessImage(bitmap1);
+Faceprint fp1 = sdk.getLargestFaceFeatureVector(img1);
+
+Image img2 = sdk.preprocessImage(bitmap2);
+Faceprint fp2 = sdk.getLargestFaceFeatureVector(img2);
+
+SimilarityResult result = sdk.getSimilarity(fp1, fp2);
+boolean isSamePerson = result.similarityMeasure > 0.6f;
+```
+
+## 1:N identification
+
+Identification searches a faceprint against an on-device collection. On Android, the backing database can be SQLite (default) or PostgreSQL.
+
+### Create a collection
+
+```java
+ErrorCode err = sdk.createDatabaseConnection("fr.db");
+if (err != ErrorCode.NO_ERROR) { /* handle */ }
+
+err = sdk.createLoadCollection("staff");
+if (err != ErrorCode.NO_ERROR) { /* handle */ }
+```
+
+### Enroll faceprints
+
+```java
+List<Pair<String, String>> entries = new ArrayList<>();
+entries.add(new Pair<>("armstrong_1.jpg", "armstrong"));
+entries.add(new Pair<>("armstrong_2.jpg", "armstrong"));
+entries.add(new Pair<>("bean.jpg", "bean"));
+
+for (Pair<String, String> entry : entries) {
+    Bitmap bitmap = getBitmapFromAsset(context, entry.first);
+    try (Image image = sdk.preprocessImage(bitmap)) {
+        Faceprint fp = sdk.getLargestFaceFeatureVector(image);
+        if (fp != null) {
+            EnrollmentResult result = sdk.enrollFaceprint(fp, entry.second, "staff");
+            if (result.errorCode != ErrorCode.NO_ERROR) {
+                // handle error
+            }
+            // result.UUID is the unique id of this enrollment
+        }
+    }
+}
+```
+
+### Identify
+
+```java
+float threshold = 0.5f;
+
+Candidate top = sdk.identifyTopCandidate(probeFaceprint, threshold, "staff");
+if (top != null) {
+    Log.d(TAG, "matched: " + top.identity);
+}
+
+List<Candidate> candidates = sdk.identifyTopCandidates(probeFaceprint, 10, threshold, "staff");
+for (Candidate c : candidates) {
+    Log.d(TAG, c.identity + " @ " + c.similarityMeasure);
+}
+```
+
+## Object detection
+
+`detectObjects` returns COCO-class bounding boxes. The `label` field is an [`ObjectLabel`](/v3.0/android/ObjectLabel) enum — use its `name()` for the string form.
+
+```java
+BoundingBox[] boxes = sdk.detectObjects(image);
+for (BoundingBox box : boxes) {
+    Log.d(TAG, box.label.name() + " @ " + box.probability);
+}
+```
+
+## Attribute and quality APIs
+
+Once you have a `FaceBoxAndLandmarks` or a `Facechip`, you can run any of the attribute APIs:
+
+```java
+MaskDetectionResult mask     = sdk.detectMask(image, face);
+GlassesDetectionResult glass = sdk.detectGlasses(image, face);
+BlinkState blink             = sdk.detectBlink(image, face);
+EstimateHeadOrientation pose = sdk.estimateHeadOrientation(image, face);
+Spoof spoof                  = sdk.detectSpoof(image, face);
+```
+
+For quality gating before recognition, extract the aligned face chip and run quality / blur:
+
+```java
+Facechip chip = sdk.extractAlignedFace(image, face);
+FaceImageQualityResult quality = sdk.estimateFaceImageQuality(chip);
+FaceImageBlurDetectionResult blur = sdk.detectFaceImageBlur(chip);
+```
+
+## Cleanup
+
+`SDK` and `Image` both hold native memory. Both implement `AutoCloseable`:
+
+```java
+try (SDK sdk = new SDK(context, options)) {
+    sdk.setLicense(token);
+    // work
+}
+```
+
+Or call `sdk.destroy()` explicitly when you're done with it.

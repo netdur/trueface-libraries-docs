@@ -1,34 +1,9 @@
 # IdentifyTopCandidateResult
 
-## `public class IdentifyTopCandidateResult`
+Result of identifying the top candidate in a 1-to-N face search.
 
-This class represents the result of identifying the top candidate in a face recognition operation, containing the error code, candidate information, and a flag indicating if a candidate was found.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the identification operation.
-
-#### `public Candidate candidate`
-
-The top candidate identified in the face recognition operation.
-
-#### `public boolean found`
-
-Indicates whether a candidate was found.
-
-### Constructors
-
-#### `public IdentifyTopCandidateResult()`
-
-Default constructor.
-
-#### `public IdentifyTopCandidateResult(ErrorCode errorCode, Candidate candidate, boolean found)`
-
-Constructor to initialize the `IdentifyTopCandidateResult` with specific values.
-
-- **Parameters:**
-  - `errorCode` - The error code indicating the result of the identification operation.
-  - `candidate` - The top candidate identified in the face recognition operation.
-  - `found` - Indicates whether a candidate was found.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `Candidate candidate` - The top candidate. See [Candidate](/v3.0/android/Candidate).
+- `boolean found` - Whether a candidate above the match threshold was found.

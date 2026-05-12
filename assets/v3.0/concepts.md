@@ -1,46 +1,48 @@
-## Face Recognition Implementation Flow
+# Face Recognition Concepts
 
-Implementing a face recognition process can be achieved by following these detailed steps and guidelines. This comprehensive approach will help ensure a more accurate and easily understandable face recognition system:
+Face recognition with the Trueface SDK is a pipeline of discrete steps. Each step is a separate API call, which gives you control over what to run, when, and at what resolution.
 
-###
-### 1. Obtain a High-Quality Photograph
+## 1. Capture an input image
 
-Acquire a high-quality photo (either as a file or as array bytes). The photo should be clear, well-lit, and medium-sized. Ensure the image is correctly rotated and oriented for optimal facial recognition results. A high-resolution image increases the chances of successful recognition, as it provides more facial feature details.
+Provide a clear, well-lit image — from camera, file, or raw bytes. The minimum recommended size for reliable detection is **480 × 360**, with each face occupying at least **100 × 100 pixels** for detection and **200 × 200** for landmark or feature extraction.
 
-###
-### 2. Detect Faces in Your Photo
+Make sure the image is rotated to upright before passing it in. The SDK does not auto-rotate based on EXIF.
 
-Identify faces present in the given photo using advanced face detection algorithms. In most cases, focusing on the largest face in the photo is advantageous, as it provides the best opportunity for further processing and analysis.
+## 2. Detect faces
 
-###
-### 3. Extract Facial Features
+Run face detection to locate every face in the frame as a [`FaceBoxAndLandmarks`](/v3.0/android/FaceBoxAndLandmarks), which carries a bounding box, five-point landmarks (eyes, nose, mouth corners), and a detection score.
 
-Extract facial features (represented as an array of numbers) and store them for later use. Label the extracted features with the name of the person in the photo, such as "Joshua" or "Bryan". The SDK contains robust feature extraction methods for improved accuracy.
+For most authentication flows you only care about the largest face — use `detectLargestFace` to skip the multi-face overhead.
 
-###
-### 4. Build a Feature Database
+## 3. Extract a faceprint
 
-Create a database to store the extracted facial features and their corresponding labels. This database will be used to match new input images against the enrolled faces. Regularly updating the database with new faces and features ensures a more accurate recognition system.
+A **faceprint** is a fixed-size feature vector (a `Faceprint` object) computed from a detected face. Faceprints are the unit of comparison — never raw pixels.
 
-###
-### 5. Calculate Similarity
+Faceprints from the same person score higher when compared, regardless of pose, lighting, or background, as long as the input image quality is sufficient.
 
-Compare the newly extracted features with previously calculated features. If the two sets of features closely match, the facial recognition process has successfully identified the person. Otherwise, a mismatch occurs, and the face remains unrecognized.
+## 4. Store faceprints in a collection
 
-###
-### 6. Set a Threshold for Matches
+A **collection** is a named, on-device set of faceprints with an associated identity string per entry. Collections are backed by SQLite. Enroll once, then identify many times.
 
-Determine an appropriate threshold for matching facial features. This threshold value will dictate whether two feature sets are considered a match or not. Fine-tuning this value ensures a balance between false positives and false negatives, maintaining system reliability.
+Collections also store the model name used to generate their faceprints. You cannot mix faceprints from different recognition models in the same collection.
 
-###
-### 7. Utilize SDK Utilities
+## 5. Compare or identify
 
-Leverage the SDK's capabilities to streamline the development and deployment of your facial recognition program. Our SDK offers a set of API methods for enrolling and matching candidates based on facial features, making the process more efficient and effective.
+- **1:1 comparison** — `getSimilarity(fp1, fp2)` returns a similarity score and a calibrated match probability. Use this for verification flows.
+- **1:N identification** — `identifyTopCandidate(faceprint, threshold, collectionName)` searches a loaded collection and returns the best match above the threshold, or null.
 
-###
-### 8. Monitor and Optimize Performance
+## 6. Choose a threshold
 
-Continuously monitor the performance of your face recognition system, making adjustments and optimizations as needed. Regularly updating the SDK, fine-tuning parameters, and expanding the feature database will ensure the system remains accurate and reliable over time.
+A threshold is a similarity score above which two faceprints are considered the same person. Lower thresholds increase recall (fewer false rejects) but also increase false-accept risk. Pick the threshold for your security posture — typical security-conscious values are in the 0.4–0.6 similarity range for the heavier recognition models.
 
-###
-Our team is always available to provide support and guidance concerning our SDK. Feel free to reach out for assistance.
+## 7. Use liveness and quality checks
+
+Before trusting a recognition result, verify the input is from a real, present person:
+
+- **Passive spoof** — `detectSpoof` flags photos, screens, and masks from a single frame.
+- **Active spoof** — `detectActiveSpoof` runs a two-stage near/far flow with explicit landmarks at each stage.
+- **Quality** — `estimateFaceImageQuality`, `detectFaceImageBlur`, `checkFaceImageExposure` reject low-quality captures before they reach the recognition step.
+
+## 8. Iterate on thresholds and models
+
+Recognition is a tradeoff between speed and accuracy. The lightweight models (`LITE_V2`, `LITE_V3`) run fast on phones with small memory footprints; the heavy models (`TFV6`, `TFV7`) give the highest accuracy on capable hardware. Profile both, then pick.

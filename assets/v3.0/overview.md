@@ -1,13 +1,23 @@
-## Trueface SDK (Software Development Kit) for Mobile and Bindings
+# Trueface SDK for Mobile
 
-Welcome! The Trueface SDK serves as the foundation for all our products, offering an extensive range of features and capabilities designed specifically for mobile platforms (iOS and Android) as well as additional bindings like C. Developed in C++, the SDK boasts a self-contained, dependency-free architecture, allowing it to run entirely offline. With support for both CPU and GPU deployment, the SDK is engineered to minimize runtime memory usage through lazy initialization.
+The Trueface SDK delivers face detection, face recognition, liveness detection, and object detection on Android and iOS. It runs fully on-device — no network calls — and works with CPU inference out of the box, with optional GPU acceleration on supported hardware.
 
-The SDK has been meticulously compiled as a static library, optimized to function seamlessly on a variety of architectures and targets, including x86, Arm32, AArch64, and CUDA. It is compatible with a wide array of operating systems such as Linux, MacOS, Windows, Android, and iOS. Catering to diverse needs, the Trueface SDK offers both high-accuracy heavy models and lightweight models suitable for embedded deployments.
+## What's included
 
-In addition to its core C++ and Python offerings, the Trueface SDK extends support to language bindings for Node.js, Java (Android), and mobile platforms. As prioritized languages at Trueface, C++ and Python receive the latest features, enhancements, and bug fixes before any other languages. Explore our Trueface SDK implementations in C++ and Python using the provided links.
+- **Face detection** — fast and accurate models, with single-largest-face and multi-face variants
+- **Face recognition** — 1:1 similarity and 1:N identification against on-device collections (SQLite-backed)
+- **Liveness detection** — passive spoof detection and an active spoof flow using near/far prompts
+- **Face attributes** — mask detection, glasses detection, blink detection, head orientation, image quality, blur, and exposure
+- **Object detection** — 80-class COCO model with fast and accurate variants
+- **Encrypted on-device database** for face template collections
 
-The C and mobile libraries have been specifically tailored as language bindings of the Trueface SDK, adapted to suit the unique form factors and requirements of various platforms. Our mobile-focused SDK empowers developers to create cutting-edge applications, harnessing the full potential of Trueface's AI models on iOS and Android devices.
+## Supported platforms
 
-As we continue to expand the scope of our SDK, we are committed to providing comprehensive support and resources for developers working with different languages and platforms. The Trueface SDK's flexibility, versatility, and ease of integration make it an indispensable tool for a wide range of applications, from large-scale enterprise solutions to compact embedded systems.
+- **Android** — minimum API 24 (Android 7.0). 16 KB page size compatible. ABIs: `armeabi-v7a`, `arm64-v8a`, `x86_64`. See [Android Setup](/v3.0/android/setup).
+- **iOS** — minimum iOS 12. Distributed as an XCFramework supporting device and simulator on Apple Silicon and Intel. See [iOS Guide](/v3.0/ios/guide).
 
-Stay tuned for more exciting updates and developments in our Trueface SDK for mobile platforms and language bindings, as we strive to bring the power of Trueface's AI technology to an even wider array of devices and applications.
+## Architecture
+
+The mobile SDKs are thin native bindings around a single C++ core, so feature parity between Android and iOS is high. The same models power both platforms.
+
+Initialization is lazy by default — modules load on first use. You can pre-initialize specific modules at construction time via [`ConfigurationOptions`](/v3.0/android/ConfigurationOptions) to avoid first-call latency in latency-sensitive paths.

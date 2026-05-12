@@ -1,25 +1,8 @@
 # FaceImageQualityResult
 
-## `public class FaceImageQualityResult`
+Result of a face image quality assessment.
 
-This class represents the result of a face image quality assessment operation, containing the error code and the quality score.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the quality assessment operation.
-
-#### `public float quality`
-
-The quality score of the face image.
-
-### Constructors
-
-#### `public FaceImageQualityResult(ErrorCode errorCode, float quality)`
-
-Constructor to initialize the `FaceImageQualityResult` with specific values.
-
-- **Parameters:**
-  - `errorCode` - The error code indicating the result of the quality assessment operation.
-  - `quality` - The quality score of the face image.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `float quality` - The face image quality score.

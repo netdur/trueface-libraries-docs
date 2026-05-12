@@ -1,747 +1,817 @@
-# Trueface SDK Objective-C
+# Objective-C API
 
-This enumeration is a binding for a C++ SDK. For detailed explanations of each error code and the corresponding C++ SDK functionality, please refer to the [official C++ SDK documentation](https://reference.trueface.ai/cpp/dev/latest/index.html).
+This is the reference for the public types and methods exposed by `<trueface/tf_sdk_binding.h>`. All classes and enums are prefixed with `TF` and are usable from both Objective-C and Swift.
+
+---
 
 ## Enums
 
 ### TFErrorCode
-- This enumeration is used to handle errors and exceptions in a systematic way, allowing developers to easily identify and resolve issues during the integration and usage of the SDK.
-```C
-    NO_ERROR,
-    INVALID_LICENSE,
-    FILE_READ_FAIL,
-    UNSUPPORTED_IMAGE_FORMAT,
-    UNSUPPORTED_MODEL,
-    NO_FACE_IN_FRAME,
-    FAILED,
-    COLLECTION_CREATION_ERROR,
-    DATABASE_CONNECTION_ERROR,
-    ENROLLMENT_ERROR,
-    MAX_COLLECTION_SIZE_EXCEEDED,
-    NO_RECORD_FOUND,
-    NO_COLLECTION_FOUND,
-    COLLECTION_DELETION_ERROR,
-    EXTREME_FACE_ANGLE,
-    FACE_TOO_CLOSE,
-    FACE_TOO_FAR,
-    FACE_TOO_SMALL,
-    FACE_NOT_CENTERED,
-    EYES_CLOSED,
-    MASK_DETECTED,
-    TOO_DARK,
-    TOO_BRIGHT,
-    DATABASE_NOT_CONNECTED,
-    COLLECTION_NOT_LOADED,
-    FEATURE_NOT_SUPPORTED,
-    COLLECTION_IS_EMPTY,
-    INPUT_IS_EMPTY,
-    STRING_CANNOT_CONTAIN_HYPHEN,
-    STRING_CANNOT_CONTAIN_UPPERCASE,
-    NO_COLLECTION_SPECIFIED,
-    POSTGRESQL_VERSION_MISMATCH,
-    INVALID_ARGUMENT
+Status codes returned from SDK operations. `NO_ERROR` indicates success.
+
+```
+NO_ERROR
+INVALID_LICENSE
+FILE_READ_FAIL
+UNSUPPORTED_IMAGE_FORMAT
+UNSUPPORTED_MODEL
+NO_FACE_IN_FRAME
+FAILED
+COLLECTION_CREATION_ERROR
+DATABASE_CONNECTION_ERROR
+ENROLLMENT_ERROR
+MAX_COLLECTION_SIZE_EXCEEDED
+NO_RECORD_FOUND
+NO_COLLECTION_FOUND
+COLLECTION_DELETION_ERROR
+EXTREME_FACE_ANGLE
+FACE_TOO_CLOSE
+FACE_TOO_FAR
+FACE_TOO_SMALL
+FACE_NOT_CENTERED
+EYES_CLOSED
+MASK_DETECTED
+TOO_DARK
+TOO_BRIGHT
+DATABASE_NOT_CONNECTED
+COLLECTION_NOT_LOADED
+FEATURE_NOT_SUPPORTED
+COLLECTION_IS_EMPTY
+INPUT_IS_EMPTY
+STRING_CANNOT_CONTAIN_HYPHEN
+STRING_CANNOT_CONTAIN_UPPERCASE
+NO_COLLECTION_SPECIFIED
+POSTGRESQL_VERSION_MISMATCH
+INVALID_ARGUMENT
 ```
 
 ### TFColorCode
-- This enumeration specifies the color formats that can be used with the SDK. It helps in defining the format of the images that are processed by the SDK.
-```C
-    bgr,
-    rgb,
-    bgra,
-    rgba,
-    gray,
-    yuv_i420,
-    yuv_nv12
+Pixel layout of a raw image buffer passed to `preprocessImageWithData:`.
+
+```
+bgr
+rgb
+bgra
+rgba
+gray
+yuv_i420
+yuv_nv12
 ```
 
-Each color format has its specific use case and is important for ensuring compatibility with different types of image processing and computer vision tasks in the SDK.
-
 ### TFObjectLabel
-- Enumerates the various object classes recognized by the SDK. This enumeration is essential for object detection and classification tasks. Notably, some keys are prefixed with object_ to avoid conflicts with Objective-C and Swift keywords.
-```C
-    person,
-    bicycle,
-    car,
-    motorcycle,
-    airplane,
-    bus,
-    train,
-    truck,
-    boat,
-    traffic_light,
-    fire_hydrant,
-    stop_sign,
-    parking_meter,
-    bench,
-    bird,
-    cat,
-    dog,
-    horse,
-    sheep,
-    cow,
-    elephant,
-    bear,
-    zebra,
-    giraffe,
-    backpack,
-    umbrella,
-    handbag,
-    tie,
-    suitcase,
-    frisbee,
-    skis,
-    snowboard,
-    sports_ball,
-    kite,
-    baseball_bat,
-    baseball_glove,
-    skateboard,
-    surfboard,
-    tennis_racket,
-    bottle,
-    wine_glass,
-    cup,
-    object_fork,  // Prefixed with 'object_' to avoid language conflicts
-    knife,
-    spoon,
-    bowl,
-    banana,
-    apple,
-    sandwich,
-    orange,
-    broccoli,
-    carrot,
-    hot_dog,
-    pizza,
-    donut,
-    cake,
-    chair,
-    couch,
-    potted_plant,
-    bed,
-    dining_table,
-    toilet,
-    tv,
-    laptop,
-    mouse,
-    remote,
-    keyboard,
-    cell_phone,
-    microwave,
-    oven,
-    toaster,
-    sink,
-    refrigerator,
-    book,
-    object_clock, // Prefixed with 'object_' to avoid language conflicts
-    vase,
-    scissors,
-    teddy_bear,
-    hair_drier,
-    toothbrush
+The 80 object classes returned by `detectObjects:`. `object_fork` and `object_clock` are prefixed to avoid clashing with Objective-C/Swift reserved identifiers.
+
+```
+person
+bicycle
+car
+motorcycle
+airplane
+bus
+train
+truck
+boat
+traffic_light
+fire_hydrant
+stop_sign
+parking_meter
+bench
+bird
+cat
+dog
+horse
+sheep
+cow
+elephant
+bear
+zebra
+giraffe
+backpack
+umbrella
+handbag
+tie
+suitcase
+frisbee
+skis
+snowboard
+sports_ball
+kite
+baseball_bat
+baseball_glove
+skateboard
+surfboard
+tennis_racket
+bottle
+wine_glass
+cup
+object_fork
+knife
+spoon
+bowl
+banana
+apple
+sandwich
+orange
+broccoli
+carrot
+hot_dog
+pizza
+donut
+cake
+chair
+couch
+potted_plant
+bed
+dining_table
+toilet
+tv
+laptop
+mouse
+remote
+keyboard
+cell_phone
+microwave
+oven
+toaster
+sink
+refrigerator
+book
+object_clock
+vase
+scissors
+teddy_bear
+hair_drier
+toothbrush
 ```
 
 ### TFFaceDetectionFilter
-- This enumeration allows you to filter detected faces based on score thresholds, which are derived from the ROC (Receiver Operating Characteristic) curve. It helps in fine-tuning the balance between false positives and false negatives in face detection.
-```C
-    HIGH_RECALL,
-    HIGH_PRECISION,
-    BALANCED,
-    UNFILTERED
+Tradeoff between false positives and false negatives when filtering detection scores.
+
 ```
-
-Each option serves a specific purpose:
-
-HIGH_RECALL: Best for scenarios where missing a face is more critical than mistakenly identifying a non-face as a face.
-HIGH_PRECISION: Ideal when it is crucial to avoid false positives, even if it means some faces might not be detected.
-BALANCED: Offers a middle ground, suitable for most applications where a balance is needed.
-UNFILTERED: Useful for testing or in scenarios where capturing every potential face, regardless of false positives, is necessary.
+HIGH_RECALL
+HIGH_PRECISION
+BALANCED
+UNFILTERED
+```
 
 ### TFDatabaseManagementSystem
-- Defines the options for the database management system used to store Faceprints. This enumeration helps in selecting the appropriate storage backend based on the application's requirements and constraints.
-```C
-    SQLITE,
-    NONE
-```
-Each option caters to different use cases:
+Backend used to persist faceprints. The iOS binding supports two backends.
 
-SQLITE: Ideal for more permanent and stable storage where data persistence across sessions is crucial. Particularly useful in embedded systems or situations with limited database connections.
-NONE: Suitable for temporary or transient storage needs where persistence is not required, such as in testing environments or applications where data longevity is not a concern. This option ensures faster access but lacks data retention capabilities.
+```
+SQLITE
+NONE
+```
 
 ### TFFacialRecognitionModel
-- Enumerates the facial recognition models provided by the SDK. Each model varies in terms of accuracy, inference speed, and intended use case. For a detailed comparison of model performances, refer to the SDK's [ROC](https://docs.trueface.ai/roc-curves) curves and the [FAQ page](https://reference.trueface.ai/cpp/dev/latest/py/faq.html#what-are-the-differences-between-the-face-recognition-models).
-```C
-    LITE,
-    LITE_V2,
-    LITE_V3,
-    TFV5_2,
-    TFV6,
-    TFV7
-```
-Each model serves specific requirements:
+Face recognition model used to generate faceprints. TFV7 is the most accurate; LITE_V3 is the most efficient.
 
-LITE & LITE_V2: Best for lightweight applications where speed is prioritized over accuracy.
-TFV5_2: A balanced choice for unmasked face recognition, offering good speed and accuracy.
-TFV6: Specialized for scenarios involving masked faces, ensuring high accuracy in such conditions.
-TFV7: Offers the highest accuracy, ideal for applications where precision is paramount and computational resources are sufficient.
+```
+LITE_V2
+LITE_V3
+TFV5_2
+TFV6
+TFV7
+```
 
 ### TFFaceDetectionModel
-- This enumeration defines the available models for face detection within the SDK. It allows selection between speed and accuracy based on the specific requirements of the use case.
-```C
-    FACE_FAST,
-    FACE_ACCURATE
+Face detection model selection. `FACE_FAST` favours speed; `FACE_ACCURATE` favours recall.
+
 ```
-
-Each model caters to different needs:
-
-* FACE_FAST: Best used in scenarios where responsiveness and real-time processing are key, such as in live video analysis or applications requiring rapid feedback.
-* FACE_ACCURATE: Recommended for use cases where the accuracy of face detection is critical, like high-quality image analysis or when processing static images where time is not a constraint.
+FACE_FAST
+FACE_ACCURATE
+```
 
 ### TFObjectDetectionModel
-- This enumeration specifies the models available for object detection in the SDK, offering a choice between accuracy and speed to accommodate different application requirements.
-```C
-    OBJECT_ACCURATE,
-    OBJECT_FAST
-```
-Model Selection:
+Object detection model selection.
 
-OBJECT_ACCURATE: Best for situations where detailed and precise object detection is essential, like in high-quality image analysis or environments where the accuracy of detection takes precedence over processing speed.
-OBJECT_FAST: Recommended for use cases demanding quick feedback, such as in real-time surveillance systems, live video streaming, or applications where swift response times are crucial.
+```
+OBJECT_ACCURATE
+OBJECT_FAST
+```
 
 ### TFActiveSpoofStage
-- Enumerates the stages in active spoof detection, which involves analyzing two types of images: near and far.
+Identifies which of the two active-spoof captures is being processed.
 
-* NEAR: Represents the near image stage in the active spoof detection process.
-* FAR: Indicates the far image stage.
-This enum is crucial for active spoof detection systems that require differentiating between these two stages for accurate analysis.
+```
+NEAR
+FAR
+```
 
 ### TFMaskLabel
-- Enumerates the results from mask detection on faces.
+Result of mask detection.
 
-* MASK: Indicates that a mask is detected on the face.
-* NO_MASK: Signifies that no mask is present on the face.
-This enum is essential in applications where mask detection is necessary, especially relevant in health and safety protocols.
+```
+MASK
+NO_MASK
+```
 
 ### TFGlassesLabel
-- Enumerates the results from detecting eyeglasses on faces.
+Result of eyeglass detection.
 
-* GLASSES: Implies that glasses are detected on the face.
-* NO_GLASSES: Means that no glasses are present on the face.
-This is particularly useful in applications where the presence of glasses might affect facial recognition or other analyses.
+```
+GLASSES
+NO_GLASSES
+```
 
 ### TFSpoofLabel
-- Enumerates the results from spoof detection to determine the authenticity of a face image.
+Result of spoof (liveness) detection.
 
-* REAL: The face image is identified as real.
-* FAKE: The image is suspected to be an attempted spoof.
-This enum is crucial for security and authentication systems to differentiate between genuine and spoofed face images.
+```
+REAL
+FAKE
+```
 
 ### TFRotateFlags
-- Enumerates options for rotating images, which is essential in ensuring images are oriented correctly for processing.
+Image rotation amounts.
 
-* ROTATE_0: Indicates no rotation is to be applied to the image.
-* ROTATE_90_CLOCKWISE: Specifies a rotation of 90 degrees in the clockwise direction.
-* ROTATE_180: Implies a rotation of 180 degrees, essentially flipping the image upside down.
-* ROTATE_90_COUNTERCLOCKWISE: Denotes a rotation of 270 degrees clockwise, or equivalently 90 degrees counterclockwise.
-This enum is crucial for image preprocessing, ensuring that the images are aligned correctly before further analysis or processing.
+```
+ROTATE_0
+ROTATE_90_CLOCKWISE
+ROTATE_180
+ROTATE_90_COUNTERCLOCKWISE
+```
 
 ### TFFaceImageQuality
-- Enumerates different quality levels of a face image, particularly in the context of its suitability for face recognition.
+Qualitative assessment of a face image for recognition.
 
-* GOOD: The image quality is deemed good for face recognition, with no significant issues affecting the recognition process.
-* UNDER_EXPOSED: Indicates that the image is underexposed, which might hinder effective face recognition.
-* OVER_EXPOSED: Suggests that the image is overexposed, potentially impacting the recognition accuracy.
-* BLURRY: The image is blurry, which could negatively affect the clarity and recognition of facial features.
-This enum is essential for assessing the suitability of face images in recognition systems, allowing for the filtering out of poor-quality images that might lead to inaccurate results.
+```
+GOOD
+UNDER_EXPOSED
+OVER_EXPOSED
+BLURRY
+```
 
-## Classes
+---
 
-### TFEncryptDatabase
-- is a class in the SDK for managing AES encryption of biometric templates and identity strings in the database.
-
-### Properties:
-* enableEncryption (bool): Determines whether database encryption is enabled or not. Enabling this adds overhead to Faceprint enrollment and loading a collection from a database into memory, but does not impact the 1 to N identification time. By default, encryption is disabled (false).
-
-* key (NSString): The encryption key used for AES encryption. Before being used, the key is hashed to a fixed length. The default value for the key is an empty string (@"").
-
-### Notes:
-* When encryption is enabled, particularly with a PostgreSQL backend, it is highly recommended to use SSL for the PostgreSQL connection to ensure enhanced security.
-* This class plays a critical role in protecting sensitive biometric data, making it essential for applications that handle personal identification information.
-
-### TFInitializeModule
-- is a class in the SDK designed for managing the initialization of various modules. It allows for either lazy initialization (default) or pre-initialization of modules.
-
-### Properties:
-* faceDetector (bool): Controls the initialization of the face detection module. Default is false, meaning lazy initialization.
-* faceRecognizer (bool): Determines the initialization state of the face recognition module. Default is false.
-* objectDetector (bool): Manages the initialization of the object detection module. Default is false.
-* bodyposeEstimator (bool): Sets the initialization for the body pose estimation module. Default is false.
-* blinkDetector (bool): Controls the initialization of the blink detection module. Default is false.
-* activeSpoof (bool): Determines whether the active spoofing detection module is pre-initialized. Default is false.
-* passiveSpoof (bool): Manages the initialization state of the passive spoofing detection module. Default is false.
-* landmarkDetector (bool): Controls the initialization of the facial landmark detection module. Default is false.
-* maskDetector (bool): Determines the initialization state of the mask detection module. Default is false.
-* faceOrientationDetector (bool): Manages the initialization of the face orientation detection module. Default is false.
-* faceBlurDetector (bool): Controls the initialization of the face blur detection module. Default is false.
-* eyeglassDetector (bool): Determines whether the eyeglass detection module is pre-initialized. Default is false.
-* faceTemplateQualityEstimator (bool): Estimate face template quality. Default is false.
-
-### Notes:
-* By default, the SDK uses lazy initialization, meaning modules are only initialized when they are first used. This approach conserves memory by not loading models of unused modules.
-* Pre-initialization loads the model files into memory during the SDK constructor, which can be beneficial if you know certain modules will be used, as it speeds up the first inference by avoiding on-demand loading.
-
-### TFUninitializeModule
-- is a class in the SDK designed for unloading models from memory when they are no longer needed. This helps in efficient memory management, especially in scenarios where certain modules are used sporadically.
-
-### Properties:
-* maskDetector (bool): Controls the unloading of the mask detection module from memory. Default is false.
-* faceRecognizer (bool): Determines the unloading state of the face recognition module. Default is false.
-* faceDetector (bool): Manages the unloading of the face detection module from memory. Default is false.
-* objectDetector (bool): Sets the unloading for the object detection module. Default is false.
-* bodyposeEstimator (bool): Controls the unloading of the body pose estimation module. Default is false.
-* blinkDetector (bool): Manages the unloading state of the blink detection module. Default is false.
-* activeSpoof (bool): Determines whether the active spoofing detection module is unloaded from memory. Default is false.
-* passiveSpoof (bool): Controls the unloading of the passive spoofing detection module. Default is false.
-* landmarkDetector (bool): Manages the unloading of the facial landmark detection module from memory. Default is false.
-* faceOrientationDetector (bool): Determines the unloading state of the face orientation detection module. Default is false.
-* faceBlurDetector (bool): Controls the unloading of the face blur detection module. Default is false.
-* eyeglassDetector (bool): Manages the unloading state of the eyeglass detection module. Default is false.
-* faceTemplateQualityEstimator (bool): Estimate face template quality. Default is false.
-
-### Notes:
-* Unloading modules that are not in use can significantly free up memory resources, making the SDK more efficient, especially in resource-constrained environments.
-* The properties in this class should be used judiciously to balance between memory usage and the readiness of the modules for quick deployment.
+## Configuration classes
 
 ### TFConfigurationOptions
-- is a class in the SDK that encapsulates various configuration settings for the SDK's functionality. It allows for customization of the SDK's behavior and performance to suit different platform and application requirements.
+Configuration passed to `-[TFSDK initWithConfigurationOptions:]`.
 
-### Properties:
-* useCoreML (bool): Option to use CoreML (iOS only). Defaults to false.
-* fdModel (TFFaceDetectionModel): The model used for face detection. Default is FACE_FAST.
-* objModel (TFObjectDetectionModel): The model used for object detection. Default is OBJECT_ACCURATE.
-* smallestFaceHeight (int): The minimum face height detectable by the face detector. Default is 40 pixels, with a minimum value of 16 pixels. Setting -1 adjusts the detection scale range dynamically.
-* fdFilter (TFFaceDetectionFilter): The face detection filter used. Default is BALANCED.
-* dbms (TFDatabaseManagementSystem): Database management system for storing Faceprints. Default is SQLITE.
-* modelsPath (NSString): The directory path containing the model files.
-* frVectorCompression (bool): Enables compression of the feature vector for faster 1 to 1 comparisons and 1 to N searches. Defaults to false.
-* initializeModule (TFInitializeModule*): Allows pre-initialization of specified modules in the SDK constructor. Default uses lazy initialization.
-* encryptDatabase (TFEncryptDatabase*): Option to encrypt biometric templates and identity strings in the database using AES encryption. Default is disabled.
+**Properties:**
+- `bool useCoreML` - Enable the CoreML inference provider on supported devices.
+- `TFFacialRecognitionModel frModel` - Face recognition model (default `TFV5`).
+- `TFFaceDetectionModel fdModel` - Face detection model (default `FACE_FAST`).
+- `TFObjectDetectionModel objModel` - Object detection model (default `OBJECT_ACCURATE`).
+- `int smallestFaceHeight` - Minimum detectable face height in pixels (default 40, min 16, `-1` enables dynamic range).
+- `TFFaceDetectionFilter fdFilter` - Face detection score filter (default `BALANCED`).
+- `TFDatabaseManagementSystem dbms` - Backend for storing faceprints (default `SQLITE`).
+- `NSString *modelsPath` - Directory containing the model files.
+- `bool frVectorCompression` - Compress feature vectors to speed up 1:1 and 1:N comparisons.
+- `TFInitializeModule *initializeModule` - Pre-initialize specific modules at construction time.
+- `TFEncryptDatabase *encryptDatabase` - AES encryption settings for stored faceprints.
 
-### Notes:
-* This class provides a comprehensive set of options to tailor the SDK's performance and functionality according to specific platform capabilities and application needs.
-* Default values are set to ensure the SDK works out-of-the-box for most scenarios, with the flexibility to adjust settings for specialized use cases.
+### TFInitializeModule
+Per-module flags that opt out of lazy initialization by loading the model in the SDK constructor.
 
-### TFPoint
-- is a class in the SDK representing a point in a two-dimensional space, typically used for coordinates in image processing.
+**Properties:**
+- `bool faceDetector` - Pre-load the face detector.
+- `bool faceRecognizer` - Pre-load the face recognizer.
+- `bool objectDetector` - Pre-load the object detector.
+- `bool blinkDetector` - Pre-load the blink detector.
+- `bool activeSpoof` - Pre-load the active spoof detector.
+- `bool passiveSpoof` - Pre-load the passive spoof detector.
+- `bool landmarkDetector` - Pre-load the 106-point landmark detector.
+- `bool maskDetector` - Pre-load the mask detector.
+- `bool faceOrientationDetector` - Pre-load the face orientation detector.
+- `bool faceBlurDetector` - Pre-load the face blur detector.
+- `bool eyeglassDetector` - Pre-load the eyeglass detector.
+- `bool faceTemplateQualityEstimator` - Pre-load the face template quality estimator.
 
-### Properties:
-* x (float): Represents the coordinate along the horizontal axis, or pixel column.
-* y (float): Represents the coordinate along the vertical axis, or pixel row.
+### TFUninitializeModule
+Per-module flags passed to `-[TFSDK uninitializeModule:]` to release loaded models.
 
-### Notes:
-* This class is fundamental for representing spatial locations in image and video analysis, such as identifying specific points on a detected object or facial feature.
-* The use of floating-point values for x and y allows for precision, which is especially important in scenarios where exact pixel locations are crucial.
+**Properties:**
+- `bool maskDetector` - Unload the mask detector.
+- `bool faceRecognizer` - Unload the face recognizer.
+- `bool faceDetector` - Unload the face detector.
+- `bool objectDetector` - Unload the object detector.
+- `bool bodyposeEstimator` - Unload the body pose estimator.
+- `bool blinkDetector` - Unload the blink detector.
+- `bool activeSpoof` - Unload the active spoof detector.
+- `bool passiveSpoof` - Unload the passive spoof detector.
+- `bool landmarkDetector` - Unload the 106-point landmark detector.
+- `bool faceOrientationDetector` - Unload the face orientation detector.
+- `bool faceBlurDetector` - Unload the face blur detector.
+- `bool eyeglassDetector` - Unload the eyeglass detector.
+- `bool faceTemplateQualityEstimator` - Unload the face template quality estimator.
+
+### TFEncryptDatabase
+AES-encryption settings for collections persisted to disk.
+
+**Properties:**
+- `bool enableEncryption` - Enable encryption of stored templates and identity strings.
+- `NSString *key` - Encryption key; hashed to a fixed length before use.
 
 ### TFModelOptions
-- is a class in the SDK that provides configuration options specifically for generating the feature vector in facial recognition processes.
+Options recorded in a faceprint indicating how the feature vector was generated.
 
-### Properties:
-* frVectorCompression (bool): Indicates whether the feature vector compression, as specified by Trueface::ConfigurationOptions.frVectorCompression, was enabled during the generation of the template.
-
-### Notes:
-* This setting is particularly important for managing the balance between computational efficiency and the precision of the feature vector used in facial recognition.
-* Enabling frVectorCompression can lead to more efficient storage and faster processing, which is beneficial in scenarios with resource constraints or when handling large volumes of data.
-
-### TFFaceprint
-- is a class in the SDK that encapsulates the face feature vector along with its associated metadata. This class is vital for representing and storing the unique characteristics of a face as recognized by the SDK.
-
-### Properties:
-* featureVector (NSArray): An array of floats describing the face. This vector is the core representation of the facial features as recognized by the SDK.
-* sdkVersion (NSString): The version of the SDK used to generate the feature vector. This information is crucial for ensuring compatibility and understanding the context in which the faceprint was created.
-* modelName (NSString): The name of the model used to generate the feature vector. Different models may produce different types of feature vectors, so this information is important for accurate recognition and comparison.
-* modelOptions (TFModelOptions*): A reference to TFModelOptions which contains additional configuration options used during the generation of the feature vector.
-
-### Notes:
-* TFFaceprint plays a central role in facial recognition tasks, enabling the SDK to capture, compare, and analyze facial features effectively.
-* The inclusion of metadata like sdkVersion and modelName alongside the featureVector ensures that the faceprint data is self-contained and can be used reliably across different versions or configurations of the SDK.
-* modelOptions provide insights into the specific settings used during the generation of the feature vector, which can be critical for certain advanced use cases or troubleshooting.
-
-### TFBoundingBox
-- is a class in the SDK that represents a bounding box around a detected object or feature in an image. This class is crucial for object detection and localization tasks.
-
-### Properties:
-* labelString (NSString*): The label of the detected object as a string. This provides a human-readable name for the object class.
-* label (TFObjectLabel): The enumerated label of the detected object. It corresponds to specific object classes defined in the TFObjectLabel enumeration.
-* probability (float): The confidence probability of the detection. This value indicates how confident the model is that the bounding box accurately represents the detected object.
-* topLeft (TFPoint*): A TFPoint object representing the top-left corner of the bounding box. It specifies the starting point of the bounding box in the image.
-* width (float): The width of the bounding box, indicating how wide the detected object is within the image.
-* height (float): The height of the bounding box, indicating the vertical size of the detected object.
-
-### Notes:
-* TFBoundingBox is integral for understanding where in an image a particular object is located and how large it appears in that image.
-* The combination of topLeft, width, and height provides a complete description of the bounding box's position and size, which is essential for applications like object tracking, counting, or further analysis.
-*  labelString and label offer flexibility in how the detected objects are identified and processed, catering to both human-readable and programmatically efficient formats.
-
-### TFFaceBoxAndLandmarks
-- is a class in the SDK designed for representing detected faces along with their bounding boxes and facial landmarks.
-
-### Properties:
-* topLeft (TFPoint*): A TFPoint object representing the top-left corner of the face bounding box. This point marks the starting coordinate of the bounding box on the image.
-* bottomRight (TFPoint*): A TFPoint object indicating the bottom-right corner of the face bounding box. This, in combination with topLeft, defines the size and position of the bounding box.
-* landmarks (NSArray*): An array of TFPoint objects, each representing a specific facial landmark (like the left eye, right eye, nose, left mouth corner, and right mouth corner). These landmarks provide detailed positional information about key facial features.
-* score (float): A confidence score indicating the likelihood of the detection being a true positive. A value lower than 0.85 typically suggests a higher chance of the detection being a false positive.
-
-### Notes:
-* TFFaceBoxAndLandmarks is essential in facial recognition and analysis tasks, where precise detection and identification of faces and their features are required.
-* The combination of a bounding box (topLeft and bottomRight) and facial landmarks (landmarks) allows for detailed and accurate analysis of faces in images, useful in applications like emotion recognition, identity verification, and augmented reality.
-* The score property adds a layer of confidence assessment, enabling applications to filter out less reliable detections and focus on high-confidence results.
-
-### TFLandmark
-- is a class in the SDK used to represent a landmark, typically a body joint, in body pose estimation tasks.
-
-### Properties:
-* point (TFPoint*): A TFPoint object that specifies the coordinate of the joint in the image. This coordinate pinpoints the exact location of the landmark.
-* score (float): A value representing the confidence score for the detected joint. This score indicates the likelihood that the landmark is correctly identified at the specified point.
-* label (NSString*): A label for the joint, providing a human-readable identifier for the type of landmark (e.g., elbow, knee, etc.).
-
-### Notes:
-* TFLandmark is crucial for applications involving body pose estimation, where identifying and tracking various body joints is essential.
-* The point property ensures precise localization of each joint, which is fundamental in accurately interpreting human body language and movements.
-* The score adds a layer of confidence assessment, allowing for more reliable and accurate pose estimation, particularly in complex or dynamic environments.
-
-### TFCandidate
-- is a class in the SDK that represents a candidate in face recognition tasks, primarily used in scenarios involving matching or comparing faces.
-
-### Properties:
-* similarityMeasure (float): A value representing the computed similarity between two face feature vectors. This measure indicates how closely the candidate's features match those of the target face.
-* matchProbability (float): The probability that the two face feature vectors are a match. This provides an assessment of the likelihood of the candidate being the correct match.
-* identity (NSString*): A string representing the identity of the match. This could be a name, an identifier, or any label assigned to the recognized face.
-* UUID (NSString*): The unique identifier for the match. This is typically a UUID (Universally Unique Identifier) that uniquely distinguishes each candidate.
-
-### Notes:
-* TFCandidate plays a vital role in applications where face recognition is used for identification, verification, or comparison purposes.
-* The combination of similarityMeasure and matchProbability provides a comprehensive understanding of how close the candidate is to the target face, both in terms of feature similarity and the overall probability of a match.
-* identity and UUID offer ways to link the recognized face to specific individuals or entries in a database, facilitating tasks like user authentication, personalized experiences, or tracking in security systems.
-
-### TFSpoofPrediction
-- is a class in the SDK used for representing the outcome of a spoof detection analysis. This class is essential in scenarios where determining the authenticity of a presented face (real vs. spoof) is crucial.
-
-### Properties:
-* errorCode (TFErrorCode): An enumerated value representing any error that might have occurred during the spoof detection process. This helps in identifying issues or failures in the detection.
-* score (float): A confidence score indicating the likelihood of the detection being accurate. This score assesses the confidence level of the spoof prediction.
-* label (TFSpoofLabel): An enumeration that classifies the result of the spoof detection into categories, such as real, fake, or uncertain.
-
-### Notes:
-* TFSpoofPrediction is particularly important in security and authentication systems where distinguishing between genuine and fake (spoofed) faces is vital to prevent unauthorized access or fraud.
-* The errorCode property provides a way to handle and respond to potential errors or anomalies in the spoof detection process, ensuring robust and reliable operation.
-* The score and label together offer a comprehensive assessment of the spoof detection, allowing systems to make informed decisions based on the level of confidence and the type of prediction (real or spoof).
-
-### TFCollectionMetadata
-- is a class in the SDK that provides metadata information about a specific faceprint collection. This class is key for managing and understanding the characteristics of faceprint collections.
-
-### Properties:
-* collectionName (NSString*): The name of the collection. It serves as an identifier for different collections.
-numIdentities (unsigned long long): The number of unique identities in the collection. This indicates the diversity of the dataset.
-* numFaceprints (unsigned long long): The total number of faceprints enrolled in the collection. This reflects the size of the collection.
-* modelName (NSString*): The name of the facial recognition model used to generate the faceprints in the collection. It helps in understanding the compatibility and performance aspects.
-* featureVectorSizeBytes (int): The size of the faceprint feature vector in bytes. This gives an idea about the data size of each faceprint.
-* modelOptions (TFModelOptions*): Additional options that were used to generate the faceprints in the collection. This includes settings like vector compression.
-* encrypted (bool): Indicates whether the collection is encrypted or not. This is crucial for security and privacy considerations.
-
-### Notes:
-* TFCollectionMetadata is essential for applications that manage multiple faceprint collections, as it provides vital information for organizing, retrieving, and understanding these collections.
-* Knowing the modelName and modelOptions used for a collection is important for ensuring consistency and compatibility, especially when working with different versions or configurations of the SDK.
-* The encrypted property is particularly important for applications dealing with sensitive or private data, ensuring adherence to privacy standards and regulations.
-
-### TFBlinkState
-- is a class in the SDK that provides results from blink detection, allowing for analysis of eye closure states. This class is especially useful in applications involving driver monitoring, fatigue detection, or user interaction based on eye movements.
-
-### Properties:
-* isLeftEyeClosed (bool): A boolean indicating whether the left eye is predicted to be closed. The prediction is based on a combination of the left eye's score and aspect ratio.
-* isRightEyeClosed (bool): Similar to isLeftEyeClosed, but for the right eye. It indicates whether the right eye is predicted to be closed.
-* leftEyeScore (float): A score indicating the state of the left eye - with 0 indicating closed and 1 indicating open. This score is part of the computation to determine isLeftEyeClosed.
-* rightEyeScore (float): A score for the right eye, functioning similarly to leftEyeScore. It's used in determining isRightEyeClosed.
-* leftEyeAspectRatio (float): The aspect ratio of the left eye, computed as the height divided by the width of the eye. It's a factor in calculating isLeftEyeClosed.
-* rightEyeAspectRatio (float): The aspect ratio for the right eye, calculated in the same way as leftEyeAspectRatio. It plays a role in the prediction for isRightEyeClosed.
-
-### Notes:
-* TFBlinkState is integral in systems where understanding eye movements and states is critical. By providing detailed metrics like scores and aspect ratios, it allows for nuanced analysis of eye behavior.
-* The properties offer the flexibility to set custom thresholds that best suit specific camera setups and lighting conditions, enhancing the adaptability of the blink detection feature.
-* The combination of scores and aspect ratios makes the blink detection more robust and reliable, catering to a wide range of real-world conditions and scenarios.
+**Properties:**
+- `bool frVectorCompression` - Whether vector compression was enabled at generation time.
 
 ### TFColorRGB
-- is a class in the SDK designed to represent colors in the RGB color space. It's particularly useful in applications that involve image processing and need to define specific colors for various purposes like drawing, filtering, or visualization.
+24-bit RGB colour. Channel values must be in `[0, 255]`.
 
-### Properties:
-* r (int): Represents the red channel of the color. The value must be within the range [0, 255], where 0 means no red and 255 means full red intensity.
-* g (int): Represents the green channel. Similar to the red channel, its value is between 0 and 255, indicating the intensity of the green color.
-* b (int): Stands for the blue channel, again with values ranging from 0 to 255, determining the intensity of the blue color.
+**Properties:**
+- `int r` - Red channel.
+- `int g` - Green channel.
+- `int b` - Blue channel.
 
-### Notes:
-* TFColorRGB is essential for defining and manipulating colors in image and video analysis tasks. It allows for precise control over the color components, enabling accurate color representation and manipulation.
-* The use of integer values in the range [0, 255] makes it compatible with standard RGB color models used in digital images and displays.
-* This class can be used in various contexts like setting the color of bounding boxes, landmarks, or overlays in image processing applications.
+---
 
-### TFSimilarity
-- is a class in the SDK designed to encapsulate the results of a similarity assessment, typically used in face recognition and matching scenarios.
-
-### Properties:
-* matchProbability (float): Represents the probability that two face feature vectors are a match. This value provides an assessment of the likelihood of a correct match.
-* similarityMeasure (float): A value indicating the degree of similarity between two feature vectors. This measure is key in determining how closely the features of two faces resemble each other.
-
-### Notes:
-* TFSimilarity is critical in applications where determining the degree of resemblance between faces is necessary, such as in authentication or identification systems.
-* The combination of matchProbability and similarityMeasure offers a comprehensive view of the similarity, enabling more informed decisions based on both the likelihood and the degree of match.
-
-### TFCollectionIdentities
-- is a class used for representing a pair of identity information within a collection, typically used in scenarios involving database management and faceprint identification.
-
-### Properties:
-* identity (NSString*): A string representing the identity of a person or an object within the collection. This could be a name, label, or any identifier.
-* UUID (NSString*): The unique identifier associated with the identity. It's typically a UUID (Universally Unique Identifier) that serves to distinguish each entry in the collection.
-
-### Notes:
-* TFCollectionIdentities plays an important role in managing and referencing specific identities within a large collection of faceprints or other biometric data.
-* The use of UUID alongside a human-readable identity provides a robust way to manage and query identities within the system, ensuring both clarity and uniqueness.
-
-<!-- start of result container -->
-### TFDetectObjectsResult
-- Represents the result of an object detection operation.
-#### Properties:
-* `boundingBoxes` (NSArray*): An array of bounding boxes for each detected object.
-* `errorCode` (TFErrorCode): The error code indicating the success or failure of the detection process.
-
-### TFDetectLargestFaceResult
-- Encapsulates the result of detecting the largest face in an image.
-#### Properties:
-* `faceBoxAndLandmarks` (TFFaceBoxAndLandmarks*): The bounding box and landmarks of the detected face.
-* `found` (bool): Indicates whether a face was found.
-* `errorCode` (TFErrorCode): The error code from the detection operation.
-
-### TFDetectFacesResult
-- Represents the result of a face detection operation.
-#### Properties:
-* `faceBoxAndLandmarks` (NSArray*): An array of bounding boxes and landmarks for each detected face.
-* `errorCode` (TFErrorCode): The error code for the face detection process.
-
-### TFFaceLandmarksResult
-- Provides the result of a face landmarks detection operation.
-#### Properties:
-* `faceLandmark` (NSArray*): An array of landmarks for the detected face(s).
-* `errorCode` (TFErrorCode): The error code from the landmarks detection.
-
-### TFLandmarksResult
-- Contains the result of a general landmarks detection operation.
-#### Properties:
-* `landmark` (NSArray*): An array of detected landmarks.
-* `errorCode` (TFErrorCode): The error code for the landmarks detection process.
-
-### TFFaceImageQualityResult
-- Represents the result of a face image quality assessment.
-#### Properties:
-* `score` (float): The quality score of the face image.
-* `errorCode` (TFErrorCode): The error code from the quality assessment process.
-
-### TFFaceTemplateQualityResult
-- Provides the result of assessing the quality of a face template.
-#### Properties:
-* `isTemplateQualityGood` (bool): Indicates whether the template quality is considered good.
-* `score` (float): The quality score of the face template.
-* `errorCode` (TFErrorCode): The error code from the quality assessment.
-
-### TFFaceImageExposureResult
-- Encapsulates the result of a face image exposure assessment.
-#### Properties:
-* `faceImageQuality` (TFFaceImageQuality): The overall image quality assessment.
-* `percentImageBright` (float): The percentage of the image that is considered bright.
-* `percentImageDark` (float): The percentage of the image that is considered dark.
-* `percentFaceBright` (float): The percentage of the face area that is considered bright.
-* `errorCode` (TFErrorCode): The error code from the exposure assessment.
-
-### TFActiveSpoofResult
-- Represents the result of a spoofing detection operation.
-#### Properties:
-* `label` (TFSpoofLabel): The label indicating the type of spoofing detected, if any.
-* `score` (float): The score indicating the likelihood of spoofing.
-* `errorCode` (TFErrorCode): The error code from the spoofing detection process.
-
-### TFEnrollFaceprintResult
-- Represents the result of enrolling a faceprint in a system.
-#### Properties:
-* `UUID` (NSString*): The unique identifier of the enrolled faceprint.
-* `errorCode` (TFErrorCode): The error code from the enrollment process.
-
-### TFCollectionNamesResult
-- Provides the result containing the names of faceprint collections.
-#### Properties:
-* `collectionNames` (NSArray*): An array of names of the collections.
-* `errorCode` (TFErrorCode): The error code from retrieving the collection names.
-
-### TFCollectionIdentitiesResult
-- Encapsulates the result of retrieving identities from a collection.
-#### Properties:
-* `collectionIdentities` (NSArray*): An array of identities in the collection.
-* `errorCode` (TFErrorCode): The error code from the retrieval process.
-
-### TFRemoveByIdentityResult
-- Represents the result of removing faceprints by identity.
-#### Properties:
-* `numFaceprintsRemoved` (int): The number of faceprints removed.
-* `errorCode` (TFErrorCode): The error code from the removal process.
-
-### TFIdentifyTopCandidateResult
-- Encapsulates the result of identifying the top candidate in a face recognition search.
-#### Properties:
-* `candidate` (TFCandidate*): The top candidate identified.
-* `found` (bool): Indicates whether a candidate was found.
-* `errorCode` (TFErrorCode): The error code from the identification process.
-
-### TFIdentifyTopCandidatesResult
-- Represents the result of identifying the top candidates in a face recognition search.
-#### Properties:
-* `candidates` (NSArray*): An array of top candidates identified.
-* `found` (bool): Indicates whether any candidates were found.
-* `errorCode` (TFErrorCode): The error code from the identification process.
-
-### TFMaskResult
-- Provides the result of detecting a mask
-
- on a face.
-#### Properties:
-* `label` (TFMaskLabel): The label indicating whether a mask is present.
-* `score` (float): The score indicating the likelihood of mask presence.
-* `errorCode` (TFErrorCode): The error code from the mask detection process.
-
-### TFGlassesResult
-- Represents the result of detecting glasses on a face.
-#### Properties:
-* `label` (TFGlassesLabel): The label indicating the type of glasses detected, if any.
-* `errorCode` (TFErrorCode): The error code from the glasses detection process.
-
-### TFFaceImageRotationResult
-- Encapsulates the result of assessing the rotation in a face image.
-#### Properties:
-* `rotation` (TFRotateFlags): The flags indicating the rotation status of the face image.
-* `errorCode` (TFErrorCode): The error code from the rotation assessment process.
-
-### TFFaceImageBlurResult
-- Provides the result of assessing the blur level in a face image.
-#### Properties:
-* `faceImageQuality` (TFFaceImageQuality): The overall image quality assessment.
-* `score` (float): The blur score of the face image.
-* `errorCode` (TFErrorCode): The error code from the blur assessment process.
-<!-- end of result container -->
-
-### TFHeadOrientation
-- is a class in the SDK used to represent the orientation of a head in three-dimensional space. This class is essential in applications that require analyzing or tracking head movements and positions.
-
-### Properties:
-* yaw (float): Represents the rotation around the vertical axis (Y-axis), indicating left or right rotation of the head.
-* pitch (float): Represents the rotation around the side-to-side axis (X-axis), indicating up or down tilt of the head.
-* roll (float): Represents the rotation around the front-to-back axis (Z-axis), indicating the tilt of the head to the left or right shoulder.
-* errorCode (TFErrorCode): An enumerated value that captures any error that might have occurred during the head orientation detection. This helps in identifying and handling potential issues.
-
-### Notes:
-* TFHeadOrientation is crucial in scenarios such as driver monitoring systems, interactive applications responding to head movements, and augmented reality experiences.
-* The properties yaw, pitch, and roll enable a comprehensive understanding of head orientation, which is key for accurate and realistic interaction in various applications.
-* The inclusion of errorCode ensures robust error handling, allowing for more reliable and error-resilient head orientation detection.
-
-### TFFacechip
-- is a class in the SDK that manages a 'face chip' image. A face chip is an aligned and cropped image of a face, optimized for facial recognition and analysis.
-
-### Methods:
-* destroy(): Frees the resources associated with the face chip.
-* loadImage(NSString *filepath): Loads a face chip image from the specified file path.
-* saveImage(NSString *filepath): Saves the face chip image to the specified file path.
-* getChannels(): Returns the number of color channels in the face chip image.
-* getHeight(): Retrieves the height of the face chip image.
-* getWidth(): Retrieves the width of the face chip image.
-* getData(): Returns the face chip image data as NSData.
-* getUIImage(): Converts and returns the face chip image as a UIImage object (useful for iOS applications).
-
-### Notes:
-* `destroy()`: This method is specifically designed to proactively manage memory by freeing up the resources associated with the face chip. In scenarios like live camera processing, where images are continuously analyzed, Automatic Reference Counting (ARC) in iOS might not release memory quickly enough. This can lead to memory buildup and potential application crashes due to excessive memory usage.
-By explicitly calling destroy, developers can force the application to immediately free the memory associated with a face chip, preventing memory buildup and enhancing application stability and performance.
-Furthermore, during the dealloc phase, when ARC finally attempts to clean up, the invalidate flag is used to determine if the memory has already been freed, ensuring that memory management is handled effectively and avoiding any redundant release attempts.
-
-### TFImage
-- is a class in the SDK that represents an image, providing functionalities for manipulation and analysis. This class is essential for handling image data within various image processing tasks in the SDK.
-
-### Methods:
-* getErrorCode(): Returns a TFErrorCode indicating the status or any error associated with the image.
-* destroy(): Frees the resources associated with the image. This method is particularly useful in scenarios involving real-time image processing (like camera feeds), where it can be used to manage memory effectively, preventing buildup and potential crashes.
-* rotate(TFRotateFlags rotateFlags): Rotates the image according to the specified TFRotateFlags.
-* saveImage(NSString *filepath): Saves the image to the specified file path.
-* getChannels(): Returns the number of color channels in the image.
-* getHeight(): Retrieves the height of the image.
-* getWidth(): Retrieves the width of the image.
-* getData(): Returns the image data as NSData.
-* getUIImage(): Converts and returns the image as a UIImage object (useful for iOS applications).
-
-### Notes:
-* Similar to TFFacechip, the destroy method in TFImage serves a critical role in proactive memory management, especially in high-frequency image processing scenarios. It allows developers to immediately release the memory associated with an image, which is vital in real-time applications to prevent memory overflow and ensure smooth operation.
-
+## Core classes
 
 ### TFSDK
-- is a comprehensive class in the SDK that encapsulates a wide range of functionalities related to image processing, face recognition, object detection, and more. This class serves as the central interface for most of the SDK's capabilities.
+The main entry point. Owns native resources; call `dealloc` (or release in MRR) when finished. Pre-initialize heavy modules through `TFConfigurationOptions.initializeModule` to avoid first-call latency.
 
-### Initialization and Management Methods:
-* init: Initializes the SDK.
-* initWithConfigurationOptions: Initializes the SDK with specified configuration options.
+#### License and lifecycle
 
-### License Management:
-* setLicense: Sets the license token for the SDK.
-* isLicensed: Checks if the SDK is properly licensed.
-* getExpireTime: Retrieves the expiration time of the license.
-* getVersion: Gets the SDK version.
+##### `- (id)init`
+Initialize the SDK with default configuration.
 
-### Image Processing:
-* preprocessImage: Preprocesses a UIImage.
-* preprocessImageWithData: Preprocesses an image with specific data, dimensions, and color code.
-* preprocessImagePath: Preprocesses an image from a file path.
+##### `- (id)initWithConfigurationOptions:(TFConfigurationOptions *)options`
+Initialize the SDK with the supplied configuration.
 
-### Detection and Recognition:
-* detectObjects: Detects objects in a given image.
-* detectLargestFace: Detects the largest face in an image.
-* detectFacesForImage: Detects all faces in an image.
-* getFaceLandmarksForImage: Retrieves facial landmarks.
-* extractAlignedFaceFromImage: Extracts an aligned face from the image.
-* extractAlignedFaceFromImage: Extracts an aligned face with specified margins and scale.
-* getLargestFaceFeatureVectorFromImage: Gets the feature vector of the largest detected face.
-* getFaceFeatureVectorForImage: Obtains the face feature vector for a specific face.
-* faceprintToJson: Converts a faceprint to JSON.
-* jsonToFaceprint: Converts JSON to a faceprint.
-* getSimilarityBetweenFaceprint: Computes the similarity between two faceprints.
-* estimateHeadOrientationForImage: Estimates the head orientation.
-* estimateFaceImageQuality: Estimates the quality of a face image.
+##### `- (void)dealloc`
+Release all native resources owned by the SDK.
 
-### Exposure and Quality Checks:
-^ estimateFaceTemplateQuality: Checks the quality of face template.
-* checkFaceImageExposure: Checks the exposure quality of a face image.
-* detectBlinkInImage: Detects blinking in a face.
-* checkSpoofImageFaceSizeForImage: Checks the face size in an image for spoof detection.
-* detectActiveSpoofWithNearFaceLandmarks: Detects active spoofing attempts.
-* detectSpoofInImage: Detects spoofing in a face image.
+##### `- (void)uninitializeModule:(TFUninitializeModule *)uninitializeModule`
+Unload model files for the modules whose flags are set.
 
-### Database and Collection Management:
-* createDatabaseConnection: Creates a database connection.
-* createLoadCollection: Creates and loads a collection.
-* createCollection: Creates a new collection.
-* loadCollection: Loads an existing collection.
-* deleteCollection: Deletes a collection.
-* enrollFaceprint: Enrolls a faceprint in a collection.
-* getCollectionNames: Retrieves the names of all collections.
-* getCollectionMetadata: Gets metadata of a specific collection.
-* getCollectionIdentities: Retrieves identities within a collection.
-* removeByUUID: Removes a faceprint by UUID.
-* removeByIdentity: Removes a faceprint by identity.
+##### `- (bool)setLicense:(NSString *)token`
+Apply a license token. Must be called before running inference. Returns `true` if the token is valid.
 
-### Identification and Candidate Retrieval:
-* identifyTopCandidateWithFaceprint: Identifies the top candidate matching a faceprint.
-* identifyTopCandidatesWithFaceprint: Identifies the top candidates.
+##### `+ (bool)checkLicense:(NSString *)token`
+Validate a license token without constructing an SDK instance.
 
-### Feature Detection:
-* detectMaskInImage: Detects if a mask is worn in a face image.
-* detectGlassesInImage: Detects if glasses are worn in a face image.
-* getFaceImageRotation: Determines the rotation of a face image.
-* detectFaceImageBlur: Detects blur in a face image.
+##### `- (bool)isLicensed`
+Whether the SDK currently holds a valid license.
+
+##### `- (int)getExpireTime`
+Remaining days the current license token is valid for.
+
+##### `- (NSString *)getVersion`
+SDK version string.
+
+##### `+ (NSString *)getVersion`
+SDK version string, class method form.
+
+#### Image preprocessing
+
+##### `- (TFImage *)preprocessImage:(UIImage *)image`
+Wrap a `UIImage` for inference.
+
+##### `- (TFImage *)preprocessImageWithData:(NSData *)imageData width:(int)width height:(int)height colorCode:(TFColorCode)colorCode`
+Wrap a raw pixel buffer with the specified dimensions and pixel layout.
+
+##### `- (TFImage *)preprocessImagePath:(NSString *)imagePath`
+Load and wrap an image from a file path.
+
+#### Face detection
+
+##### `- (TFDetectLargestFaceResult *)detectLargestFace:(TFImage *)image`
+Detect the single largest face in the image.
+
+##### `- (TFDetectFacesResult *)detectFacesForImage:(TFImage *)image`
+Detect every face in the image.
+
+##### `- (TFLandmarksResult *)getFaceLandmarksForImage:(TFImage *)image faceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Get the 106-point landmark set for a previously detected face.
+
+##### `- (TFFacechip *)extractAlignedFaceFromImage:(TFImage *)image usingFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Align and crop a face into a `TFFacechip` suitable for feature extraction and quality APIs.
+
+##### `- (TFFacechip *)extractAlignedFaceFromImage:(TFImage *)image usingFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks marginLeft:(int)marginLeft marginTop:(int)marginTop marginRight:(int)marginRight marginBottom:(int)marginBottom scale:(float)scale`
+Align and crop a face with explicit margins and scale.
+
+##### `- (TFFaceImageRotationResult *)getFaceImageRotation:(TFImage *)image`
+Detect the rotation required to make the largest face upright. Use for offline images, skip in live video.
+
+#### Feature extraction and matching
+
+##### `- (TFFaceprint *)getLargestFaceFeatureVectorFromImage:(TFImage *)image`
+Detect the largest face and return its faceprint in one call.
+
+##### `- (TFFaceprint *)getFaceFeatureVectorForImage:(TFImage *)image faceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Generate a faceprint for an already-detected face.
+
+##### `- (NSString *)faceprintToJson:(TFFaceprint *)faceprint`
+Serialize a faceprint to JSON.
+
+##### `- (TFFaceprint *)jsonToFaceprint:(NSString *)faceprint`
+Deserialize a faceprint from a JSON string.
+
+##### `- (TFSimilarity *)getSimilarityBetweenFaceprint:(TFFaceprint *)faceprint1 andFaceprint:(TFFaceprint *)faceprint2`
+Compare two faceprints, returning a similarity measure and calibrated match probability.
+
+#### Quality
+
+##### `- (TFFaceImageQualityResult *)estimateFaceImageQuality:(TFFacechip *)alignedFaceImage`
+Score the visual quality of an aligned face for recognition.
+
+##### `- (TFFaceTemplateQualityResult *)estimateFaceTemplateQuality:(TFFacechip *)alignedFaceImage`
+Estimate the biometric utility of a face independent of visual quality.
+
+##### `- (TFFaceImageExposureResult *)checkFaceImageExposure:(TFImage *)image :(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Check over- and under-exposure of the face region.
+
+##### `- (TFFaceImageBlurResult *)detectFaceImageBlur:(TFFacechip *)facechip`
+Detect blur in an aligned face image.
+
+#### Attributes
+
+##### `- (TFHeadOrientation *)estimateHeadOrientationForImage:(TFImage *)image faceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Estimate yaw, pitch, and roll of the head, plus rotation and translation vectors.
+
+##### `- (TFBlinkState *)detectBlinkInImage:(TFImage *)image withFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Per-eye blink state, score, and eye aspect ratio.
+
+##### `- (TFMaskResult *)detectMaskInImage:(TFImage *)image withFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Classify the face as masked or unmasked.
+
+##### `- (TFGlassesResult *)detectGlassesInImage:(TFImage *)image withFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks`
+Classify whether the face is wearing glasses.
+
+#### Spoof detection
+
+##### `- (TFErrorCode)checkSpoofImageFaceSizeForImage:(TFImage *)image withFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks activeSpoofStage:(TFActiveSpoofStage)activeSpoofStage`
+Validate face size for an active-spoof capture. Returns `NO_ERROR`, `FACE_TOO_CLOSE`, or `FACE_TOO_FAR`.
+
+##### `- (TFActiveSpoofResult *)detectActiveSpoofWithNearFaceLandmarks:(NSArray *)nearFaceLandmarks farFaceLandmarks:(NSArray *)farFaceLandmarks`
+Active spoof detection using paired near and far landmark sets.
+
+##### `- (TFSpoofResult *)detectSpoofInImage:(TFImage *)image withFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks threshold:(float)threshold`
+Passive spoof detection with a custom score threshold.
+
+#### Object detection
+
+##### `- (TFDetectObjectsResult *)detectObjects:(TFImage *)image`
+Run the 80-class object detector.
+
+#### Collections
+
+##### `- (TFErrorCode)createDatabaseConnection:(NSString *)databaseConnectionString`
+Open or create the backing database. For SQLite, this is a filename.
+
+##### `- (TFErrorCode)createCollection:(NSString *)collectionName`
+Create a new empty collection. Call `loadCollection:` before enrolling.
+
+##### `- (TFErrorCode)createLoadCollection:(NSString *)collectionName`
+Create-or-load: open the collection if it exists, otherwise create it.
+
+##### `- (TFErrorCode)loadCollection:(NSString *)collectionName`
+Load an existing collection into memory.
+
+##### `- (TFErrorCode)deleteCollection:(NSString *)collectionName`
+Drop a collection from the database.
+
+##### `- (TFCollectionNamesResult *)getCollectionNames`
+List every collection in the connected database.
+
+##### `- (TFCollectionMetadata *)getCollectionMetadata:(NSString *)collectionName`
+Identity count, faceprint count, model used, and encryption status for a collection.
+
+##### `- (TFCollectionIdentitiesResult *)getCollectionIdentities:(NSString *)collectionName`
+List identity / UUID pairs enrolled in a collection.
+
+#### Enrollment and identification
+
+##### `- (TFEnrollFaceprintResult *)enrollFaceprint:(TFFaceprint *)faceprint withIdentity:(NSString *)identity collectionName:(NSString *)collectionName`
+Add a faceprint to a collection under the given identity. Returns the assigned UUID.
+
+##### `- (TFRemoveByIdentityResult *)removeByUUID:(NSString *)identity collectionName:(NSString *)collectionName`
+Remove a single enrollment by its UUID.
+
+##### `- (TFRemoveByIdentityResult *)removeByIdentity:(NSString *)identity collectionName:(NSString *)collectionName`
+Remove every faceprint enrolled under an identity.
+
+##### `- (TFIdentifyTopCandidateResult *)identifyTopCandidateWithFaceprint:(TFFaceprint *)faceprint collectionName:(NSString *)collectionName`
+Best match for a probe faceprint within a collection.
+
+##### `- (TFIdentifyTopCandidatesResult *)identifyTopCandidatesWithFaceprint:(TFFaceprint *)faceprint collectionName:(NSString *)collectionName`
+Top candidates for a probe faceprint, using default count and threshold.
+
+##### `- (TFIdentifyTopCandidatesResult *)identifyTopCandidatesWithFaceprint:(TFFaceprint *)faceprint numberOfCandidates:(int)numCandidates threshold:(float)threshold collectionName:(NSString *)collectionName`
+Top-N candidates above the threshold, ordered by descending similarity.
+
+---
+
+### TFImage
+A preprocessed image owned by native code. Call `destroy` from real-time pipelines (camera frames) to release memory eagerly instead of waiting for ARC.
+
+**Methods:**
+- `- (TFErrorCode)getErrorCode` - Status of the preprocessing that produced this image.
+- `- (void)destroy` - Free the underlying native buffer immediately.
+- `- (void)dealloc` - Standard ARC destructor; releases the buffer if not already destroyed.
+- `- (void)rotate:(TFRotateFlags)rotateFlags` - Rotate the image in place.
+- `- (void)resize:(int)width :(int)height` - Resize the image in place.
+- `- (void)saveImage:(NSString *)filepath` - Save the image to disk.
+- `- (int)getChannels` - Number of colour channels.
+- `- (int)getHeight` - Height in pixels.
+- `- (int)getWidth` - Width in pixels.
+- `- (NSData *)getData` - Raw pixel data.
+- `- (UIImage *)getUIImage` - Convert to `UIImage`.
+
+### TFFacechip
+An aligned, cropped face image produced by `extractAlignedFaceFromImage:...`. Input to feature extraction, image quality, template quality, and blur APIs.
+
+**Methods:**
+- `- (void)setOwnership:(struct TF_Facechip)tfFacechip` - Internal: take ownership of a native facechip.
+- `- (void)destroy` - Free the underlying native buffer immediately.
+- `- (void)dealloc` - Standard ARC destructor; releases the buffer if not already destroyed.
+- `- (void)loadImage:(NSString *)filepath` - Load a facechip image from disk.
+- `- (void)saveImage:(NSString *)filepath` - Save the facechip to disk.
+- `- (int)getChannels` - Number of colour channels.
+- `- (int)getHeight` - Height in pixels.
+- `- (int)getWidth` - Width in pixels.
+- `- (NSData *)getData` - Raw pixel data.
+- `- (UIImage *)getUIImage` - Convert to `UIImage`.
+
+### TFFaceprint
+A face feature vector and the metadata identifying how it was generated.
+
+**Properties:**
+- `bool foundFace` - Whether a face was found during generation.
+- `TFErrorCode errorCode` - Status of the generation call.
+- `NSArray *featureVector` - Array of `NSNumber` floats describing the face.
+- `NSString *sdkVersion` - SDK version that produced the faceprint.
+- `NSString *modelName` - Name of the face recognition model used.
+- `TFModelOptions *modelOptions` - Options used at generation time.
+
+---
+
+## Detection result classes
+
+### TFPoint
+2D point in image coordinates.
+
+**Properties:**
+- `float x` - Pixel column.
+- `float y` - Pixel row.
+
+### TFFaceBoxAndLandmarks
+A detected face: bounding box, five landmarks, and detection score.
+
+**Properties:**
+- `TFPoint *topLeft` - Top-left corner of the face bounding box.
+- `TFPoint *bottomRight` - Bottom-right corner of the face bounding box.
+- `NSArray *landmarks` - Five `TFPoint` landmarks: left eye, right eye, nose, left mouth corner, right mouth corner.
+- `float score` - Detection confidence; values below 0.85 are likely false positives.
+- `float height` - Face box height in pixels.
+- `float area` - Face box area in pixels squared.
+
+### TFLandmark
+A single body-pose joint.
+
+**Properties:**
+- `TFPoint *point` - Coordinate of the joint.
+- `float score` - Detection score for the joint.
+- `NSString *label` - Joint label.
+
+### TFBoundingBox
+A detected object's bounding box and class.
+
+**Properties:**
+- `NSString *labelString` - Object class as a human-readable string.
+- `TFObjectLabel label` - Object class enum value.
+- `float probability` - Detection confidence.
+- `TFPoint *topLeft` - Top-left corner of the bounding box.
+- `float width` - Width of the bounding box in pixels.
+- `float height` - Height of the bounding box in pixels.
+
+### TFCandidate
+A candidate match returned by identification.
+
+**Properties:**
+- `float similarityMeasure` - Raw similarity between the probe and the candidate.
+- `float matchProbability` - Calibrated match probability.
+- `NSString *identity` - Enrolled identity string.
+- `NSString *UUID` - UUID of the matching faceprint.
+
+### TFBlinkState
+Per-eye blink results.
+
+**Properties:**
+- `TFErrorCode errorCode` - Status of the blink detection.
+- `bool isLeftEyeClosed` - Predicted left-eye closed state.
+- `bool isRightEyeClosed` - Predicted right-eye closed state.
+- `float leftEyeScore` - Left-eye open/closed score (0 closed, 1 open).
+- `float rightEyeScore` - Right-eye open/closed score (0 closed, 1 open).
+- `float leftEyeAspectRatio` - Left-eye height divided by width.
+- `float rightEyeAspectRatio` - Right-eye height divided by width.
+
+### TFHeadOrientation
+Estimated head pose.
+
+**Properties:**
+- `float yaw` - Rotation around the vertical axis, in radians.
+- `float pitch` - Rotation around the transverse axis, in radians.
+- `float roll` - Rotation around the longitudinal axis, in radians.
+- `TFErrorCode errorCode` - Status of the orientation estimate.
+- `NSArray<NSNumber *> *rotationVec` - Rotation vector.
+- `NSArray<NSNumber *> *translationVec` - Translation vector.
+
+### TFSpoofPrediction
+Result of a generic spoof prediction.
+
+**Properties:**
+- `TFErrorCode errorCode` - Status of the spoof prediction.
+- `float score` - Spoof confidence score.
+- `TFSpoofLabel label` - `REAL` or `FAKE`.
+
+### TFSpoofResult
+Result of `detectSpoofInImage:...`, bundling head orientation, blink state, and mask label.
+
+**Properties:**
+- `TFHeadOrientation *headOrientation` - Head orientation at capture time.
+- `TFBlinkState *blinkState` - Blink state at capture time.
+- `TFMaskLabel maskLabel` - Whether a mask is present.
+- `TFSpoofLabel label` - `REAL` or `FAKE`.
+- `float score` - Spoof confidence score.
+- `TFErrorCode errorCode` - Status of the spoof detection.
+
+### TFActiveSpoofResult
+Result of paired near/far active spoof detection.
+
+**Properties:**
+- `TFSpoofLabel label` - `REAL` or `FAKE`.
+- `float score` - Spoof confidence score.
+- `TFErrorCode errorCode` - Status of the active spoof detection.
+
+### TFMaskResult
+Result of mask detection.
+
+**Properties:**
+- `TFMaskLabel label` - `MASK` or `NO_MASK`.
+- `float score` - Mask confidence score.
+- `TFErrorCode errorCode` - Status of the mask detection.
+
+### TFGlassesResult
+Result of eyeglass detection.
+
+**Properties:**
+- `TFGlassesLabel label` - `GLASSES` or `NO_GLASSES`.
+- `TFErrorCode errorCode` - Status of the glasses detection.
+
+### TFFaceImageRotationResult
+Detected rotation required to bring the largest face upright.
+
+**Properties:**
+- `TFRotateFlags rotation` - Rotation needed.
+- `TFErrorCode errorCode` - Status of the rotation check.
+
+### TFFaceImageBlurResult
+Result of blur detection on an aligned face.
+
+**Properties:**
+- `TFFaceImageQuality faceImageQuality` - Qualitative result; `GOOD` or `BLURRY`.
+- `float score` - Blur score.
+- `TFErrorCode errorCode` - Status of the blur detection.
+
+### TFFaceImageExposureResult
+Result of exposure analysis over the face region.
+
+**Properties:**
+- `TFFaceImageQuality faceImageQuality` - Qualitative result; `GOOD`, `UNDER_EXPOSED`, or `OVER_EXPOSED`.
+- `float percentImageBright` - Percentage of the full image classified as bright.
+- `float percentImageDark` - Percentage of the full image classified as dark.
+- `float percentFaceBright` - Percentage of the face region classified as bright.
+- `TFErrorCode errorCode` - Status of the exposure check.
+
+### TFFaceImageQualityResult
+Visual quality score for an aligned face.
+
+**Properties:**
+- `float score` - Visual quality score; ~0.999 is a typical enrollment threshold.
+- `TFErrorCode errorCode` - Status of the quality check.
+
+### TFFaceTemplateQualityResult
+Biometric utility of an aligned face for recognition, independent of visual quality.
+
+**Properties:**
+- `bool isTemplateQualityGood` - Whether the template quality passes the default threshold.
+- `float score` - Template quality score.
+- `TFErrorCode errorCode` - Status of the template quality check.
+
+### TFSimilarity
+Result of comparing two faceprints.
+
+**Properties:**
+- `TFErrorCode errorCode` - Status of the comparison.
+- `float matchProbability` - Calibrated match probability.
+- `float similarityMeasure` - Raw similarity measure.
+
+---
+
+## Collection result classes
+
+### TFCollectionMetadata
+Metadata about a single collection. Also returned directly by `getCollectionMetadata:`.
+
+**Properties:**
+- `TFErrorCode errorCode` - Status of the metadata fetch.
+- `NSString *collectionName` - Collection name.
+- `unsigned long long numIdentities` - Number of unique identities enrolled.
+- `unsigned long long numFaceprints` - Total faceprints enrolled.
+- `NSString *modelName` - Face recognition model the collection was generated with.
+- `int featureVectorSizeBytes` - Size of each feature vector in bytes.
+- `TFModelOptions *modelOptions` - Options used when the faceprints were generated.
+- `BOOL encrypted` - Whether the collection is AES-encrypted on disk.
+
+### TFCollectionIdentities
+A single identity / UUID pair within a collection.
+
+**Properties:**
+- `NSString *identity` - Identity string assigned at enrollment.
+- `NSString *UUID` - UUID of the enrolled faceprint.
+
+### TFCollectionNamesResult
+Result of `getCollectionNames`.
+
+**Properties:**
+- `NSArray *collectionNames` - Array of `NSString` collection names.
+- `TFErrorCode errorCode` - Status of the call.
+
+### TFCollectionIdentitiesResult
+Result of `getCollectionIdentities:`.
+
+**Properties:**
+- `NSArray *collectionIdentities` - Array of `TFCollectionIdentities` entries.
+- `TFErrorCode errorCode` - Status of the call.
+
+---
+
+## Operation result classes
+
+### TFDetectObjectsResult
+Result of `detectObjects:`.
+
+**Properties:**
+- `NSArray *boundingBoxes` - Array of `TFBoundingBox` objects for each detected object.
+- `TFErrorCode errorCode` - Status of the detection.
+
+### TFDetectLargestFaceResult
+Result of `detectLargestFace:`.
+
+**Properties:**
+- `TFFaceBoxAndLandmarks *faceBoxAndLandmarks` - The detected face, when `found` is true.
+- `bool found` - Whether a face was found.
+- `TFErrorCode errorCode` - Status of the detection.
+
+### TFDetectFacesResult
+Result of `detectFacesForImage:`.
+
+**Properties:**
+- `NSArray *faceBoxAndLandmarks` - Array of `TFFaceBoxAndLandmarks` for each detected face.
+- `TFErrorCode errorCode` - Status of the detection.
+
+### TFFaceLandmarksResult
+Result type for face-landmark queries.
+
+**Properties:**
+- `NSArray *faceLandmark` - Array of `TFPoint` landmarks.
+- `TFErrorCode errorCode` - Status of the call.
+
+### TFLandmarksResult
+Result of `getFaceLandmarksForImage:`. The 106 face landmarks are returned as `TFPoint` objects.
+
+**Properties:**
+- `NSArray *landmark` - Array of `TFPoint` landmarks.
+- `TFErrorCode errorCode` - Status of the call.
+
+### TFEnrollFaceprintResult
+Result of `enrollFaceprint:withIdentity:collectionName:`.
+
+**Properties:**
+- `NSString *UUID` - UUID assigned to the new enrollment.
+- `TFErrorCode errorCode` - Status of the enrollment.
+
+### TFRemoveByIdentityResult
+Result of `removeByIdentity:collectionName:` or `removeByUUID:collectionName:`.
+
+**Properties:**
+- `int numFaceprintsRemoved` - Number of faceprints removed.
+- `TFErrorCode errorCode` - Status of the removal.
+
+### TFIdentifyTopCandidateResult
+Result of `identifyTopCandidateWithFaceprint:collectionName:`.
+
+**Properties:**
+- `TFCandidate *candidate` - Best candidate, when `found` is true.
+- `bool found` - Whether a candidate above the threshold was found.
+- `TFErrorCode errorCode` - Status of the identification.
+
+### TFIdentifyTopCandidatesResult
+Result of the `identifyTopCandidatesWithFaceprint:...` family.
+
+**Properties:**
+- `NSArray *candidates` - Array of `TFCandidate` objects ordered by descending similarity.
+- `bool found` - Whether any candidates were found.
+- `TFErrorCode errorCode` - Status of the identification.
+
+### TFFacechipResult
+C struct returned by some internal helpers; bundles a facechip with an error code.
+
+**Properties:**
+- `TFFacechip *facechip` - The facechip.
+- `TFErrorCode errorCode` - Status of the call.

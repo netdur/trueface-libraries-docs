@@ -1,21 +1,10 @@
 # FaceDetectionFilter
 
-## `public enum FaceDetectionFilter`
+Face detection score filter.
 
-Face detection filter
+## Values
 
-## `HIGH_RECALL,`
-
-The detected face scores are thresholded to have a low precision and a high recall rate.
-
-## `HIGH_PRECISION,`
-
-The detected face scores are thresholded to have a high precision and a low recall rate.
-
-## `BALANCED,`
-
-The detected face scores are thresholded to have a medium precision and recall rate.
-
-## `UNFILTERED`
-
-The detected face scores are not thresholded.
+- `HIGH_RECALL` - Face scores thresholded for low precision and high recall.
+- `HIGH_PRECISION` - Face scores thresholded for high precision and low recall.
+- `BALANCED` - Face scores thresholded for balanced precision and recall.
+- `UNFILTERED` - Face scores are not thresholded.

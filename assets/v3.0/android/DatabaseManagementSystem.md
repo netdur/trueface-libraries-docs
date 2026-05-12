@@ -1,19 +1,9 @@
 # DatabaseManagementSystem
 
-## `public enum DatabaseManagementSystem`
+Database management system used for storing templates.
 
-Database Management System for storing templates.
+## Values
 
-### Enum Constants
-
-#### `SQLITE`
-
-Use SQLite backend. Write templates to local disk. Ideal for embedded systems or use cases where only one process connects to the database.
-
-#### `POSTGRESQL`
-
-Use a PostgreSQL backend. You must use PostgreSQL version 15. Ideal for distributed systems requiring synchronization. Note: Not supported on mobile platforms.
-
-#### `NONE`
-
-Do not write template to disk, only store in RAM. Warning, enrolled templates will not be saved after the program terminates.
+- `SQLITE` - Use a SQLite backend. Writes templates to local disk. Ideal for embedded systems or use cases where only one process connects to the database.
+- `POSTGRESQL` - Use a PostgreSQL backend (version 15 required). Ideal for distributed systems requiring synchronization. Not supported on mobile platforms.
+- `NONE` - Do not write templates to disk; store only in RAM. Enrolled templates are not persisted after the program terminates.

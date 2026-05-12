@@ -1,29 +1,8 @@
 # CollectionIdentitiesResult
 
-## `public class CollectionIdentitiesResult`
+Result of retrieving identities from a collection, containing an error code and the identity map.
 
-This class represents the result of a collection identities operation, containing an error code and a map of identities.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the operation.
-
-#### `public Map<String, List<String>> identities`
-
-A map where the key is a string representing the identity and the value is a list of strings associated with that identity.
-
-### Constructors
-
-#### `public CollectionIdentitiesResult()`
-
-Default constructor.
-
-#### `public CollectionIdentitiesResult(ErrorCode errorCode, Map<String, List<String>> identities)`
-
-Constructor to initialize the `CollectionIdentitiesResult` with a specific error code and identities map.
-
-- **Parameters:**
-  - `errorCode` - The error code indicating the result of the operation.
-  - `identities` - A map where the key is a string representing the identity and the value is a list of strings associated with that identity.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `Map<String, List<String>> identities` - A map from each identity to the list of Faceprint UUIDs enrolled under that identity.

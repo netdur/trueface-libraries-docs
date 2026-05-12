@@ -1,9 +1,7 @@
 # ModelOptions
 
-## `public class ModelOptions`
+Options used when generating a feature vector.
 
-Options used when generating the feature vector
+## Fields
 
-## `public boolean frVectorCompression = false`
-
-Indicates if the frVectorCompression was enabled when generating the template
+- `boolean frVectorCompression` - Whether `ConfigurationOptions.frVectorCompression` was enabled when the template was generated.

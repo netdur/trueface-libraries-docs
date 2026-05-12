@@ -1,15 +1,8 @@
 # PreprocessImageResult
 
-## `public class PreprocessImageResult`
+Result of an image preprocessing operation.
 
-This class represents the result of an image preprocessing operation, containing an error code and a pointer to the preprocessed image.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the preprocessing operation.
-
-#### `public long pointer`
-
-Pointer to the preprocessed image.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `long pointer` - Pointer to the preprocessed native image object.

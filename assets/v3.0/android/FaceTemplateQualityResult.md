@@ -1,30 +1,9 @@
 # FaceTemplateQualityResult
 
-## `public class FaceTemplateQualityResult`
+Result of a face template quality assessment.
 
-This class represents the result of a face template quality assessment operation, containing the error code, a boolean indicating the quality of the template, and a quality score.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the quality assessment operation.
-
-#### `public boolean isTemplateQualityGood`
-
-Indicates whether the face template quality is good.
-
-#### `public float score`
-
-The quality score of the face template.
-
-### Constructors
-
-#### `public FaceTemplateQualityResult(ErrorCode errorCode, boolean isTemplateQualityGood, float score)`
-
-Constructor to initialize the `FaceTemplateQualityResult` with specific values.
-
-- **Parameters:**
-  - `errorCode` - The error code indicating the result of the quality assessment operation.
-  - `isTemplateQualityGood` - Indicates whether the face template quality is good.
-  - `score` - The quality score of the face template.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `boolean isTemplateQualityGood` - Whether the face template quality is good.
+- `float score` - The template quality score.

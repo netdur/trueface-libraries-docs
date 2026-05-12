@@ -1,74 +1,34 @@
 # Image
 
-## `public class Image implements AutoCloseable`
+Manages a decoded image in the format expected by inference functions. Populate using the preprocessImage methods on the SDK. May reside in CPU or GPU memory. Implements `AutoCloseable`.
 
-Class which is used to manage a decoded image which is in the format expected by inference functions. Should populate `Image` using the preprocessImage functions. An `Image` can be in CPU memory or GPU memory.
+## Fields
 
-### Fields
+- `long pointer` - Pointer to the native image object.
+- `ErrorCode errorCode` - Error code indicating the result of operations on this object. See [ErrorCode](/v3.0/android/ErrorCode).
 
-#### `public long pointer`
+## Methods
 
-Pointer to the native image object.
+### `void rotate(RotateFlags rotateFlags)`
 
-#### `public ErrorCode errorCode`
+Rotate the image in place. See [RotateFlags](/v3.0/android/RotateFlags).
 
-Error code indicating the result of operations on the image.
+### `void saveImage(String filepath)`
 
-#### `private boolean invalidate`
+Save the image to disk. The path must include an image extension.
 
-Flag indicating if the image is invalid.
+### `int getHeight()`
 
-### Constructors
+Return the image height in pixels.
 
-#### `public Image(long pointer)`
+### `int getWidth()`
 
-Constructor to initialize the `Image` with a specific pointer.
+Return the image width in pixels.
 
-- **Parameters:**
-  - `pointer` - The pointer to the native image object.
+### `void destroy()`
 
-#### `public Image()`
+Release the native image resources.
 
-Default constructor. Initializes the `Image` with a new native image object.
+### `void close()`
 
-### Methods
-
-#### `public native void rotate(RotateFlags rotateFlags)`
-
-Rotate the image.
-
-- **Parameters:**
-  - `rotateFlags` - The RotateFlags indicating the rotation direction. Positive values mean counter-clockwise rotation (the coordinate origin is assumed to be the top-left corner).
-
-#### `public native void saveImage(String filepath)`
-
-Save the preprocessed image to disk.
-
-- **Parameters:**
-  - `filepath` - The filepath where the image should be saved, including the image extension.
-
-#### `public native int getHeight()`
-
-Get the image height in pixels.
-
-- **Returns:** The image height in pixels.
-
-#### `public native int getWidth()`
-
-Get the image width in pixels.
-
-- **Returns:** The image width in pixels.
-
-#### `public native void destroy()`
-
-Destroy the native image object.
-
-#### `public void close()`
-
-Close the image, releasing any resources.
-
-#### `protected void finalize() throws Throwable`
-
-Finalize the object, ensuring resources are released.
-
-- **Throws:** `Throwable` - if an error occurs during finalization.
+Closes the Image by calling `destroy()`.

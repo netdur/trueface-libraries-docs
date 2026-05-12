@@ -1,13 +1,8 @@
 # MaskLabel
 
-## `public enum MaskLabel`
+Result of mask detection.
 
-Results from mask detection
+## Values
 
-## `MASK,`
-
-There is a mask on the face
-
-## `NO_MASK`
-
-There is no mask on the face
+- `MASK` - There is a mask on the face.
+- `NO_MASK` - There is no mask on the face.

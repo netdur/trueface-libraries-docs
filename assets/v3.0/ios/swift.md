@@ -1,42 +1,52 @@
-### Interoperability of Objective-C and Swift
+# Swift bridging
 
-Objective-C methods are automatically imported into Swift with a transformed syntax that aligns with Swift’s language conventions. Understanding these transformations will help Swift developers effectively use Objective-C APIs.
+The Trueface SDK is an Objective-C framework. Xcode's Swift importer transforms Objective-C selectors into Swift function signatures automatically — here's what to expect.
 
-#### Naming Conventions
+## Naming
 
-1. **Prefix Stripping**: Objective-C methods often have prefixes related to the class or framework they belong to (e.g., `TF`). Swift removes these prefixes in the method name as they are usually redundant within the context of use.
+| Objective-C | Swift |
+|---|---|
+| Class prefix `TF` | Kept (`TFSDK`, `TFImage`) |
+| Selector base name (before first `:`) | Function name |
+| Preposition-style fragments (`InImage`, `WithLandmarks`) | Become labels, often shortened |
 
-2. **Base Name Simplification**: The initial part of the Objective-C method name (before the first colon) becomes the base name in Swift. If the base name includes prepositions or conjunctions (e.g., `In`, `With`, `And`), Swift often omits these to streamline the method name. For example, `detectSpoofInImage` becomes `detectSpoof`.
+## Parameters
 
-#### Parameter Handling
+- The first parameter usually drops its external name and folds into the selector base.
+- Subsequent parameters get short, prepositional labels (`with:`, `using:`, `in:`).
 
-1. **First Parameter Adaptation**: In Objective-C, the first parameter is often part of the method name. In Swift, the first parameter is typically standalone and its external name is omitted, making it part of the function signature. For example, `image` in `detectSpoofInImage` becomes just `in`.
+## Example
 
-2. **External Parameter Names**: Swift uses external names for the second and subsequent parameters to clarify their roles. These names are usually derived from the Objective-C method’s parameter names but are more concise. For instance, `withFaceBoxAndLandmarks:` becomes `with:`.
+Objective-C selector:
 
-3. **Argument Labels**: Swift encourages the use of argument labels to make function calls read as sentences. This means that each parameter in Swift has a label that describes its purpose, enhancing code readability and maintainability.
-
-#### Example Transformation
-
-Objective-C Method:
-```objective-c
-- (TFSpoofResult*)detectSpoofInImage:(TFImage *)image withFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks threshold:(float)threshold;
+```objc
+- (TFSpoofResult *)detectSpoofInImage:(TFImage *)image
+              withFaceBoxAndLandmarks:(TFFaceBoxAndLandmarks *)faceBoxAndLandmarks
+                            threshold:(float)threshold;
 ```
 
-Swift Equivalent:
+Imported into Swift:
+
 ```swift
-func detectSpoof(in image: TFImage, with faceBoxAndLandmarks: TFFaceBoxAndLandmarks, threshold: Float) -> TFSpoofResult
+func detectSpoof(in image: TFImage,
+                 with faceBoxAndLandmarks: TFFaceBoxAndLandmarks,
+                 threshold: Float) -> TFSpoofResult?
 ```
 
-In Swift, this method is called as follows:
+Call site:
+
 ```swift
-let spoofResult = sdk.detectSpoof(in: image, with: faceBoxAndLandmarks, threshold: 0.5)
+let result = sdk.detectSpoof(in: image, with: face, threshold: 0.5)
 ```
 
-- `in`: This label makes it clear that the function is detecting spoofing within a specific image.
-- `with`: Clarifies that detection uses the provided face box and landmarks.
-- `threshold`: Remains largely unchanged but is now an external parameter name, making its purpose in the call clear.
+## Nullability
 
-#### Summary
+Objective-C methods that may return `nil` (anything declared `nullable` or without `nonnull` annotations) come into Swift as **optional** return types. Always unwrap defensively:
 
-Understanding these transformation rules helps in utilizing Objective-C APIs within Swift. By recognizing these patterns, developers can predict how Objective-C methods will appear in Swift and use them effectively without needing to look up each method’s Swift signature.
+```swift
+guard let faceprint = sdk.getLargestFaceFeatureVector(from: image) else { return }
+```
+
+## See also
+
+The full Objective-C method list is in [Objective-C reference](/v3.0/ios/objc).

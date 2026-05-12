@@ -1,17 +1,9 @@
 # Landmark
 
-## `public class Landmark`
+Landmark representing a body joint.
 
-Landmark representing body joint.
+## Fields
 
-## `public Point point`
-
-Coordinate of the joint
-
-## `public float score`
-
-Score for the joint
-
-## `public String label`
-
-Label for the joint
+- `Point point` - Coordinate of the joint. See [Point](/v3.0/android/Point).
+- `float score` - Score for the joint.
+- `String label` - Label for the joint.

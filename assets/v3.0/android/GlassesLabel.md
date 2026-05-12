@@ -1,45 +1,8 @@
-# GlassesDetectionResult
-
-## `public class GlassesDetectionResult`
-
-This class represents the result of a glasses detection operation, containing the detected label and a confidence score.
-
-### Fields
-
-#### `public GlassesLabel label`
-
-The label indicating whether glasses were detected.
-
-#### `public float score`
-
-The confidence score of the detection.
-
-### Constructors
-
-#### `public GlassesDetectionResult()`
-
-Default constructor.
-
-#### `public GlassesDetectionResult(GlassesLabel label, float score)`
-
-Constructor to initialize the `GlassesDetectionResult` with specific values.
-
-- **Parameters:**
-  - `label` - The label indicating whether glasses were detected.
-  - `score` - The confidence score of the detection.
-
 # GlassesLabel
 
-## `public enum GlassesLabel`
+Result of eyeglass detection.
 
-Results from eye glasses detection.
+## Values
 
-### Enum Constants
-
-#### `GLASSES`
-
-There are glasses on the face.
-
-#### `NO_GLASSES`
-
-There are no glasses on the face.
+- `GLASSES` - Glasses are present on the face.
+- `NO_GLASSES` - No glasses are present on the face.

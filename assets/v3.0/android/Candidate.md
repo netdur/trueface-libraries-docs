@@ -1,17 +1,10 @@
 # Candidate
 
-## `public float similarityMeasure`
+A candidate match returned by face recognition identification.
 
-The computed similarity measure
+## Fields
 
-## `public float matchProbability`
-
-The probability the two face feature vectors are a match
-
-## `public String identity`
-
-The identity of the match
-
-## `public String UUID`
-
-The UUID of the match
+- `float similarityMeasure` - The computed similarity measure.
+- `float matchProbability` - The probability the two face feature vectors are a match.
+- `String identity` - The identity of the match.
+- `String UUID` - The UUID of the matching [Faceprint](/v3.0/android/Faceprint).

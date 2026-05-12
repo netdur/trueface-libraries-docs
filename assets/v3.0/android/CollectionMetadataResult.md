@@ -1,29 +1,8 @@
 # CollectionMetadataResult
 
-## `public class CollectionMetadataResult`
+Result of retrieving collection metadata.
 
-This class represents the result of a collection metadata retrieval operation, containing an error code and the collection metadata.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the operation.
-
-#### `public CollectionMetadata metadata`
-
-The metadata of the collection.
-
-### Constructors
-
-#### `public CollectionMetadataResult()`
-
-Default constructor.
-
-#### `public CollectionMetadataResult(ErrorCode errorCode, CollectionMetadata metadata)`
-
-Constructor to initialize the `CollectionMetadataResult` with a specific error code and collection metadata.
-
-- **Parameters:**
-  - `errorCode` - The error code indicating the result of the operation.
-  - `metadata` - The metadata of the collection.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `CollectionMetadata metadata` - The collection metadata. See [CollectionMetadata](/v3.0/android/CollectionMetadata).

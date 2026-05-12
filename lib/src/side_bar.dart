@@ -1,186 +1,201 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'dart:ui' as ui;
+import 'package:go_router/go_router.dart';
 
-class SideBar extends StatefulWidget {
-  const SideBar({Key? key}) : super(key: key);
+import 'docs_manifest.dart';
+import 'theme.dart';
 
-  static String version = 'v3.0';
+class SideBar extends StatelessWidget {
+  const SideBar({
+    super.key,
+    required this.version,
+    required this.currentPath,
+    this.onNavigate,
+  });
 
-  @override
-  State<SideBar> createState() => _SideBarState();
-}
+  final String version;
+  final String currentPath;
+  final VoidCallback? onNavigate;
 
-class _SideBarState extends State<SideBar> {
-  var versions = [
-    'v0.8',
-    'v1.1',
-    'v1.3',
-    'v1.4',
-    'v1.5',
-    'v1.6',
-    'v2.1',
-    'v2.4',
-    'v3.0'
-  ];
+  void _go(BuildContext context, String path) {
+    onNavigate?.call();
+    context.go('/$version/$path');
+  }
+
+  void _switchVersion(BuildContext context, String newVersion) {
+    onNavigate?.call();
+    context.go('/$newVersion/$currentPath');
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Widget svg = SvgPicture.asset('assets/trueface_white.svg',
-        colorFilter: const ui.ColorFilter.mode(Colors.white, BlendMode.srcIn),
-        semanticsLabel: 'Trueface Logo');
-
-    return Drawer(
-        child: ListView(
-      // Important: Remove any padding from the ListView.
-      padding: EdgeInsets.zero,
-      children: [
-        DrawerHeader(
-          decoration: const BoxDecoration(
-            color: Colors.blue,
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 42,
-                width: 100,
-                child: svg,
-              ),
-              const Padding(padding: EdgeInsets.only(top: 12)),
-              const Text('SDK Guides')
-            ],
-          ),
-        ),
-        ListTile(
-          title: Text('Get Started',
-              style: Theme.of(context).textTheme.labelMedium),
-        ),
-        ListTile(
-            title: const Text('Overview'),
-            onTap: () => Navigator.pushNamed(
-                  context,
-                  '/doc?md=/${SideBar.version}/overview.md&title=Overview',
-                )),
-        ListTile(
-          title: const Text('Concepts'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/concepts.md&title=Concepts',
-          ),
-        ),
-        ListTile(
-          title: const Text('Samples'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/samples.md&title=Samples',
-          ),
-        ),
-        ListTile(
-          title: const Text('Hardware Requirements'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/requirements.md&title=Hardware Requirements',
-          ),
-        ),
-        ListTile(
-          title: const Text('Models'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/models.md&title=Models',
-          ),
-        ),
-        ListTile(
-          title:
-              Text('Android', style: Theme.of(context).textTheme.labelMedium),
-        ),
-        ListTile(
-            title: const Text('Setup'),
-            onTap: () => Navigator.pushNamed(
-                  context,
-                  '/doc?md=/${SideBar.version}/android/setup.md&title=Setup',
-                )),
-        ListTile(
-            title: const Text('Guide'),
-            onTap: () => Navigator.pushNamed(
-                  context,
-                  '/doc?md=/${SideBar.version}/android/guide.md&title=Guide',
-                )),
-        ListTile(
-            title: const Text('Reference'),
-            onTap: () => Navigator.pushNamed(
-                  context,
-                  '/doc?md=/${SideBar.version}/android/reference.md&title=Reference',
-                )),
-        /*ListTile(
-          title: Text('C', style: Theme.of(context).textTheme.labelMedium),
-        ),
-        ListTile(
-          title: const Text('Guide'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/c/guide.md&title=C',
-          ),
-        ),*/
-        ListTile(
-          title: Text('iOS', style: Theme.of(context).textTheme.labelMedium),
-        ),
-        ListTile(
-          title: const Text('Guide'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/ios/guide.md&title=iOS',
-          ),
-        ),
-        ListTile(
-          title: const Text('Objective-C / Swift'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/ios/objc.md&title=iOS Objective-C / Swift',
-          ),
-        ),
-        /*ListTile(
-          title: const Text('Swift'),
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/doc?md=/${SideBar.version}/ios/swift.md&title=iOS Swift',
-          ),
-        ),*/
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Row(children: [
-            const Text('SDK Version'),
-            const Padding(padding: EdgeInsets.only(left: 12.0)),
-            DropdownButton(
-              isExpanded: false,
-              value: SideBar.version,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              items: versions.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  String? newPath;
-                  var path = Uri.base.toString().split('/doc?');
-                  if (path.length == 2) {
-                    newPath =
-                        '/doc?${path[1].toString().replaceFirst(SideBar.version, newValue!)}';
-                  }
-                  SideBar.version = newValue!;
-                  if (newPath != null) {
-                    Navigator.pushNamed(
-                      context,
-                      newPath,
-                    );
-                  }
-                });
-              },
+    return Material(
+      color: surfaceElevated,
+      child: SizedBox(
+        width: sidebarWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _Header(
+              version: version,
+              onVersionChanged: (v) => _switchVersion(context, v),
             ),
-          ]),
+            const Divider(height: 1, color: borderSubtle),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                children: [
+                  for (final section in docSections) ...[
+                    _SectionLabel(section.title),
+                    for (final page in section.pages)
+                      _NavTile(
+                        title: page.title,
+                        selected: page.path == currentPath,
+                        onTap: () => _go(context, page.path),
+                      ),
+                    const SizedBox(height: 8),
+                  ],
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ));
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({required this.version, required this.onVersionChanged});
+
+  final String version;
+  final ValueChanged<String> onVersionChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 28,
+            child: SvgPicture.asset(
+              'assets/trueface_white.svg',
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              alignment: Alignment.centerLeft,
+              fit: BoxFit.contain,
+              semanticsLabel: 'Trueface logo',
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'SDK Documentation',
+            style: TextStyle(color: textMuted, fontSize: 12, letterSpacing: 0.4),
+          ),
+          const SizedBox(height: 12),
+          _VersionPicker(value: version, onChanged: onVersionChanged),
+        ],
+      ),
+    );
+  }
+}
+
+class _VersionPicker extends StatelessWidget {
+  const _VersionPicker({required this.value, required this.onChanged});
+
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceDark,
+        border: Border.all(color: borderSubtle),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: docVersions.contains(value) ? value : latestVersion,
+          isDense: true,
+          isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down, color: textMuted),
+          dropdownColor: surfaceElevated,
+          style: const TextStyle(color: textPrimary, fontSize: 14),
+          items: [
+            for (final v in docVersions.reversed)
+              DropdownMenuItem(
+                value: v,
+                child: Text(v == latestVersion ? '$v  (latest)' : v),
+              ),
+          ],
+          onChanged: (v) {
+            if (v != null) onChanged(v);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 6),
+      child: Text(
+        text.toUpperCase(),
+        style: const TextStyle(
+          color: textMuted,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+}
+
+class _NavTile extends StatelessWidget {
+  const _NavTile({
+    required this.title,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String title;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: selected ? brandBlue : Colors.transparent,
+              width: 3,
+            ),
+          ),
+          color: selected ? brandBlue.withValues(alpha: 0.08) : null,
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: selected ? Colors.white : textPrimary,
+            fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
   }
 }

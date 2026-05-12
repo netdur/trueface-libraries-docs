@@ -1,9 +1,8 @@
 # Point
 
-## `public float x`
+Represents a point in 2D space.
 
-Coordinate along the horizontal axis, or pixel column
+## Fields
 
-## `public float y`
-
-Coordinate along the vertical axis, or pixel row
+- `float x` - Coordinate along the horizontal axis (pixel column).
+- `float y` - Coordinate along the vertical axis (pixel row).

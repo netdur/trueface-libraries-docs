@@ -1,29 +1,8 @@
 # RemoveIdentityResult
 
-## `public class RemoveIdentityResult`
+Result of removing an identity from a collection.
 
-This class represents the result of an identity removal operation, containing an error code and the number of faceprints removed.
+## Fields
 
-### Fields
-
-#### `public ErrorCode errorCode`
-
-The error code indicating the result of the removal operation.
-
-#### `public int numFaceprintsRemoved`
-
-The number of faceprints removed during the operation.
-
-### Constructors
-
-#### `public RemoveIdentityResult()`
-
-Default constructor.
-
-#### `public RemoveIdentityResult(ErrorCode errorCode, int numFaceprintsRemoved)`
-
-Constructor to initialize the `RemoveIdentityResult` with specific values.
-
-- **Parameters:**
-  - `errorCode` - The error code indicating the result of the removal operation.
-  - `numFaceprintsRemoved` - The number of faceprints removed during the operation.
+- `ErrorCode errorCode` - The error code indicating the result of the operation. See [ErrorCode](/v3.0/android/ErrorCode).
+- `int numFaceprintsRemoved` - The number of Faceprints removed.

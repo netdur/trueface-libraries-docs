@@ -1,23 +1,10 @@
 # FaceImageQuality
 
-## `public enum FaceImageQuality`
+Describes the quality of a face image for face recognition.
 
-Describes the quality of a face image to be used for face recognition.
+## Values
 
-### Enum Constants
-
-#### `GOOD`
-
-The quality of the image is good for face recognition.
-
-#### `UNDER_EXPOSED`
-
-The image is underexposed.
-
-#### `OVER_EXPOSED`
-
-The image is overexposed.
-
-#### `BLURRY`
-
-The image is blurry.
+- `GOOD` - The image quality is good for face recognition.
+- `UNDER_EXPOSED` - The image is under-exposed.
+- `OVER_EXPOSED` - The image is over-exposed.
+- `BLURRY` - The image is blurry.

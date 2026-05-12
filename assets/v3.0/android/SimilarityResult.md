@@ -1,29 +1,8 @@
 # SimilarityResult
 
-## `public class SimilarityResult`
+Result of a similarity comparison between two Faceprints.
 
-This class represents the result of a similarity comparison operation, containing the match probability and similarity measure.
+## Fields
 
-### Fields
-
-#### `public float matchProbability`
-
-The probability that the two face feature vectors are a match.
-
-#### `public float similarityMeasure`
-
-The computed similarity measure.
-
-### Constructors
-
-#### `public SimilarityResult()`
-
-Default constructor.
-
-#### `public SimilarityResult(float matchProbability, float similarityMeasure)`
-
-Constructor to initialize the `SimilarityResult` with specific values.
-
-- **Parameters:**
-  - `matchProbability` - The probability that the two face feature vectors are a match.
-  - `similarityMeasure` - The computed similarity measure.
+- `float matchProbability` - The probability the two face feature vectors are a match.
+- `float similarityMeasure` - The computed similarity measure.

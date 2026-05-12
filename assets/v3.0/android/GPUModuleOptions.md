@@ -1,39 +1,10 @@
 # GPUModuleOptions
 
-## `public class GPUModuleOptions`
+GPU options for a specific module (e.g. face detector). Annotated `@UnsupportedOnMobile`.
 
-GPU options for a specific module (e.g., face detector).
+## Fields
 
-### Fields
-
-#### `public Precision precision = Precision.FP16`
-
-Precision level used for inference.
-
-#### `public int maxBatchSize = 4`
-
-The maximum batch size which will be used.
-
-#### `public int optBatchSize = 1`
-
-The batch size which should be optimized for. Must be less than or equal to `Trueface::GPUModuleOptions.maxBatchSize`.
-
-#### `public long maxWorkspaceSizeMb = 2000`
-
-The maximum allowable GPU memory to be used for model conversion, in Mb. Applications should allow the engine builder as much workspace as they can afford. At runtime, the SDK allocates no more than this and typically less.
-
-### Constructors
-
-#### `public GPUModuleOptions()`
-
-Default constructor.
-
-#### `public GPUModuleOptions(Precision precision, int maxBatchSize, int optBatchSize, long maxWorkspaceSizeMb)`
-
-Constructor to initialize the `GPUModuleOptions` with specific values.
-
-- **Parameters:**
-  - `precision` - Precision level used for inference.
-  - `maxBatchSize` - The maximum batch size which will be used.
-  - `optBatchSize` - The batch size which should be optimized for.
-  - `maxWorkspaceSizeMb` - The maximum allowable GPU memory to be used for model conversion, in Mb.
+- `Precision precision` - Precision level used for inference. Default `FP16`. See [Precision](/v3.0/android/Precision).
+- `int maxBatchSize` - Maximum batch size to support. Default `4`.
+- `int optBatchSize` - Batch size to optimize for. Must be less than or equal to `maxBatchSize`. Default `1`.
+- `long maxWorkspaceSizeMb` - Maximum GPU memory in MB available for model conversion. Default `2000`.

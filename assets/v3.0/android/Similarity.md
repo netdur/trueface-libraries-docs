@@ -1,9 +1,8 @@
 # Similarity
 
-## `public double matchProbability`
+Similarity result between two face feature vectors.
 
-the probability the two face feature vectors are a match.
+## Fields
 
-## `public float similarityMeasure`
-
-the computed similarity measure.
+- `double matchProbability` - The probability the two face feature vectors are a match.
+- `float similarityMeasure` - The computed similarity measure.

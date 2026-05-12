@@ -1,15 +1,8 @@
 # SpoofLabel
 
-## `public enum SpoofLabel`
+Result of spoof detection.
 
-Results from spoof detection.
+## Values
 
-### Enum Constants
-
-#### `REAL`
-
-The face image is real.
-
-#### `FAKE`
-
-The image may be an attempted spoof.
+- `REAL` - The face image is real.
+- `FAKE` - The image may be an attempted spoof.
